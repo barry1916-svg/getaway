@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getaway ☀️ — Sunny Destinations from Ireland</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #FFF8F0;
+            color: #1a1a1a;
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        header {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            color: white;
+            padding: 44px 20px 32px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 16px;
+        }
+
+        #last-updated {
+            display: inline-block;
+            background: rgba(255,255,255,0.22);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+
+        /* ── Main ── */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 16px 60px;
+        }
+
+        /* ── Stats bar ── */
+        #stats-bar {
+            display: none;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        #result-count {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #FF6B35;
+        }
+
+        /* ── Loading ── */
+        #loading {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .spinner {
+            width: 52px;
+            height: 52px;
+            border: 5px solid #FFD4C0;
+            border-top-color: #FF6B35;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        #loading p {
+            color: #888;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        #loading small {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.82rem;
+            color: #bbb;
+        }
+
+        /* ── Error / No results ── */
+        #error, #no-results {
+            display: none;
+            text-align: center;
+            padding: 70px 20px;
+        }
+
+        #error .emoji, #no-results .emoji { font-size: 3rem; margin-bottom: 14px; }
+        #error h2, #no-results h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+        #error p, #no-results p { color: #888; }
+
+        /* ── Card grid ── */
+        #grid {
+            display: none;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 22px;
+        }
+
+        /* ── Card ── */
+        .card {
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 2px 14px rgba(0,0,0,0.07);
+            overflow: hidden;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        /* Card header strip */
+        .card-header {
+            background: linear-gradient(135deg, #FF6B35 0%, #F7931E 100%);
+            padding: 20px 20px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .city-info .flag { font-size: 1.7rem; line-height: 1; margin-bottom: 5px; }
+
+        .city-info .city-name {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1.15;
+        }
+
+        .city-info .country-name {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.82);
+            margin-top: 3px;
+        }
+
+        .temp-badge {
+            background: rgba(255,255,255,0.24);
+            border-radius: 14px;
+            padding: 10px 14px;
+            text-align: center;
+            min-width: 62px;
+        }
+
+        .temp-badge .temp-value {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1;
+        }
+
+        .temp-badge .temp-label {
+            font-size: 0.68rem;
+            color: rgba(255,255,255,0.8);
+            margin-top: 3px;
+        }
+
+        /* Card body */
+        .card-body { padding: 16px 20px 20px; }
+
+        .sunny-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #FFF3E0;
+            color: #E65100;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 4px 11px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+
+        .dates {
+            font-size: 0.88rem;
+            color: #666;
+            margin-bottom: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dates strong { color: #333; font-weight: 700; }
+
+        /* 7-day forecast strip */
+        .forecast-strip {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 14px;
+        }
+
+        .forecast-day {
+            flex: 1;
+            text-align: center;
+            background: #F5F5F5;
+            border-radius: 8px;
+            padding: 6px 2px 5px;
+        }
+
+        .forecast-day.sunny { background: #FFF9E7; }
+
+        .forecast-day .day-icon { font-size: 1.05rem; line-height: 1; }
+
+        .forecast-day .day-temp {
+            font-size: 0.63rem;
+            color: #555;
+            margin-top: 2px;
+            font-weight: 700;
+        }
+
+        .forecast-day .day-label {
+            font-size: 0.58rem;
+            color: #aaa;
+            margin-top: 1px;
+        }
+
+        /* Route tags */
+        .routes { display: flex; flex-wrap: wrap; gap: 6px; }
+
+        .route-tag {
+            background: #F3F4F6;
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-size: 0.74rem;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .route-tag .airline { font-weight: 700; color: #333; }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            header h1 { font-size: 2rem; }
+            #grid { grid-template-columns: 1fr; gap: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>☀️ Getaway</h1>
+    <p class="subtitle">Direct flights from Ireland &nbsp;·&nbsp; Hottest destinations first</p>
+    <div id="last-updated">Checking weather…</div>
+</header>
+
+<main>
+    <div id="loading">
+        <div class="spinner"></div>
+        <p>Checking the weather across Europe…<small>This may take a minute on first load</small></p>
+    </div>
+
+    <div id="error">
+        <div class="emoji">😕</div>
+        <h2>Couldn't load weather data</h2>
+        <p>Please try again later.</p>
+    </div>
+
+    <div id="no-results">
+        <div class="emoji">🌧️</div>
+        <h2>Nowhere sunny enough today</h2>
+        <p>No destinations meet the criteria right now. Check back soon!</p>
+    </div>
+
+    <div id="stats-bar">
+        <span id="result-count"></span>
+    </div>
+
+    <div id="grid"></div>
+</main>
+
+<script>
+    const FLAGS = {
+        "Spain": "🇪🇸", "Portugal": "🇵🇹", "Italy": "🇮🇹", "Greece": "🇬🇷",
+        "Croatia": "🇭🇷", "Cyprus": "🇨🇾", "France": "🇫🇷", "Netherlands": "🇳🇱",
+        "Belgium": "🇧🇪", "Switzerland": "🇨🇭", "Austria": "🇦🇹", "Hungary": "🇭🇺",
+        "Czech Republic": "🇨🇿", "Poland": "🇵🇱", "Sweden": "🇸🇪", "Denmark": "🇩🇰",
+        "Norway": "🇳🇴", "Finland": "🇫🇮", "Latvia": "🇱🇻", "Estonia": "🇪🇪",
+        "Lithuania": "🇱🇹", "Bulgaria": "🇧🇬", "Romania": "🇷🇴", "Turkey": "🇹🇷",
+        "Montenegro": "🇲🇪", "Slovenia": "🇸🇮",
+    };
+
+    function formatDate(dateStr) {
+        const d = new Date(dateStr + "T12:00:00");
+        return d.toLocaleDateString("en-GB", { day: "numeric", month: "short" });
+    }
+
+    function getDayShort(dateStr) {
+        const d = new Date(dateStr + "T12:00:00");
+        return d.toLocaleDateString("en-GB", { weekday: "short" }).slice(0, 3);
+    }
+
+    function renderCard(dest) {
+        const flag = FLAGS[dest.country] || "🌍";
+        const depart = formatDate(dest.depart_date);
+        const ret = formatDate(dest.return_date);
+
+        const forecastHTML = dest.forecast.slice(0, 7).map(day => {
+            const temp = day.temp !== null ? Math.round(day.temp) + "°" : "—";
+            const label = getDayShort(day.date);
+            return `<div class="forecast-day${day.is_good ? " sunny" : ""}">
+                <div class="day-icon">${day.icon}</div>
+                <div class="day-temp">${temp}</div>
+                <div class="day-label">${label}</div>
+            </div>`;
+        }).join("");
+
+        const routesHTML = dest.routes.map(([airline, airport]) =>
+            `<div class="route-tag"><span class="airline">${airline}</span><span>from ${airport}</span></div>`
+        ).join("");
+
+        const sunnyText = `${dest.good_days_count} sunny day${dest.good_days_count !== 1 ? "s" : ""}`;
+
+        return `<div class="card">
+            <div class="card-header">
+                <div class="city-info">
+                    <div class="flag">${flag}</div>
+                    <div class="city-name">${dest.city}</div>
+                    <div class="country-name">${dest.country}</div>
+                </div>
+                <div class="temp-badge">
+                    <div class="temp-value">${dest.best_temp}°</div>
+                    <div class="temp-label">max °C</div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="sunny-badge">☀️ ${sunnyText}</div>
+                <div class="dates">✈️ <strong>${depart}</strong>&nbsp;—&nbsp;<strong>${ret}</strong></div>
+                <div class="forecast-strip">${forecastHTML}</div>
+                <div class="routes">${routesHTML}</div>
+            </div>
+        </div>`;
+    }
+
+    async function loadWeather() {
+        try {
+            const res = await fetch("/api/weather");
+            if (!res.ok) throw new Error("API error " + res.status);
+            const data = await res.json();
+
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("last-updated").textContent = "Updated " + data.updated_at;
+
+            if (!data.destinations || data.destinations.length === 0) {
+                document.getElementById("no-results").style.display = "block";
+                return;
+            }
+
+            const statsBar = document.getElementById("stats-bar");
+            statsBar.style.display = "flex";
+            document.getElementById("result-count").textContent =
+                `${data.count} destination${data.count !== 1 ? "s" : ""} with great weather right now`;
+
+            const grid = document.getElementById("grid");
+            grid.style.display = "grid";
+            grid.innerHTML = data.destinations.map(renderCard).join("");
+
+        } catch (e) {
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("error").style.display = "block";
+            document.getElementById("last-updated").textContent = "Failed to load";
+        }
+    }
+
+    loadWeather();
+</script>
+</body>
+</html>

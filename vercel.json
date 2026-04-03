@@ -1,13 +1,15 @@
 {
   "framework": null,
+  "builds": [
+    { "src": "app.py", "use": "@vercel/python" },
+    { "src": "api/run.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    { "src": "/api/run", "dest": "/api/run.py" },
+    { "src": "/(.*)", "dest": "/app.py" }
+  ],
   "crons": [
-    {
-      "path": "/api/run",
-      "schedule": "0 7 * * *"
-    },
-    {
-      "path": "/api/run",
-      "schedule": "0 19 * * *"
-    }
+    { "path": "/api/run", "schedule": "0 7 * * *" },
+    { "path": "/api/run", "schedule": "0 19 * * *" }
   ]
 }
