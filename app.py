@@ -47,6 +47,8 @@ def weather():
     ]
 
     results = []
+    best_raw = None  # best destination regardless of criteria (for no-match fallback)
+
     for dest in active:
         result = getaway.check_destination(dest)
         if result:
@@ -57,16 +59,36 @@ def weather():
                 "good_days_count": len(result["good_days"]),
                 "depart_date": result["depart_date"],
                 "return_date": result["return_date"],
-                # Convert tuples to lists for JSON serialisation
                 "routes": [list(r) for r in result["routes"]],
                 "forecast": result["all_days"],
             })
+            if best_raw is None or result["best_temp"] > best_raw["best_temp"]:
+                best_raw = result
+        else:
+            raw = getaway.check_destination_unconstrained(dest)
+            if raw and (best_raw is None or raw["best_temp"] > best_raw["best_temp"]):
+                best_raw = raw
 
     # Hottest destinations first
     results.sort(key=lambda x: x["best_temp"], reverse=True)
 
+    # Serialise fallback destination (shown when no results meet criteria)
+    fallback = None
+    if not results and best_raw:
+        fallback = {
+            "city": best_raw["city"],
+            "country": best_raw["country"],
+            "best_temp": round(best_raw["best_temp"], 1),
+            "good_days_count": len(best_raw["good_days"]),
+            "depart_date": best_raw["depart_date"],
+            "return_date": best_raw["return_date"],
+            "routes": [list(r) for r in best_raw["routes"]],
+            "forecast": best_raw["all_days"],
+        }
+
     data = {
         "destinations": results,
+        "fallback": fallback,
         "updated_at": datetime.utcnow().strftime("%d %b %Y, %H:%M UTC"),
         "count": len(results),
     }

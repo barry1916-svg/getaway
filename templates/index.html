@@ -99,13 +99,30 @@
         /* ── Error / No results ── */
         #error, #no-results {
             display: none;
+        }
+
+        #error {
             text-align: center;
             padding: 70px 20px;
         }
 
-        #error .emoji, #no-results .emoji { font-size: 3rem; margin-bottom: 14px; }
-        #error h2, #no-results h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
-        #error p, #no-results p { color: #888; }
+        #error .emoji { font-size: 3rem; margin-bottom: 14px; }
+        #error h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+        #error p { color: #888; }
+
+        .no-match-header {
+            text-align: center;
+            padding: 40px 20px 28px;
+        }
+
+        .no-match-header .emoji { font-size: 3rem; margin-bottom: 14px; }
+        .no-match-header h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; color: #1a1a1a; }
+        .no-match-header p { color: #888; margin-bottom: 0; }
+
+        #fallback-card {
+            max-width: 380px;
+            margin: 0 auto 40px;
+        }
 
         /* ── Card grid ── */
         #grid {
@@ -276,9 +293,12 @@
     </div>
 
     <div id="no-results">
-        <div class="emoji">🌧️</div>
-        <h2>Nowhere sunny enough today</h2>
-        <p>No destinations meet the criteria right now. Check back soon!</p>
+        <div class="no-match-header">
+            <div class="emoji">🌧️</div>
+            <h2>Nowhere sunny enough today</h2>
+            <p>No destinations hit the criteria right now — but here's the closest thing:</p>
+        </div>
+        <div id="fallback-card"></div>
     </div>
 
     <div id="stats-bar">
@@ -361,7 +381,11 @@
             document.getElementById("last-updated").textContent = "Updated " + data.updated_at;
 
             if (!data.destinations || data.destinations.length === 0) {
-                document.getElementById("no-results").style.display = "block";
+                const noResults = document.getElementById("no-results");
+                noResults.style.display = "block";
+                if (data.fallback) {
+                    document.getElementById("fallback-card").innerHTML = renderCard(data.fallback);
+                }
                 return;
             }
 
