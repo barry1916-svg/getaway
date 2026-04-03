@@ -1,0 +1,6 @@
+.env
+.claude/
+screenshots/
+__pycache__/
+*.pyc
+PLAN.md
