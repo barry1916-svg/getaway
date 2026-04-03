@@ -1,11 +1,5 @@
 {
   "framework": null,
-  "functions": {
-    "api/run.py": {
-      "runtime": "python3.12",
-      "maxDuration": 300
-    }
-  },
   "crons": [
     {
       "path": "/api/run",
