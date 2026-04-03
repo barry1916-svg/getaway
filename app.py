@@ -24,6 +24,21 @@ _cache = {"data": None, "ts": 0}
 CACHE_TTL = 3600  # 1 hour
 
 
+def _serialise_routes(result):
+    """Convert route tuples to dicts with booking URLs."""
+    return [
+        {
+            "airline": airline,
+            "airport": airport,
+            "url": getaway.get_booking_url(
+                airline, airport, result["city"],
+                result["depart_date"], result["return_date"]
+            ),
+        }
+        for airline, airport in result["routes"]
+    ]
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -59,7 +74,7 @@ def weather():
                 "good_days_count": len(result["good_days"]),
                 "depart_date": result["depart_date"],
                 "return_date": result["return_date"],
-                "routes": [list(r) for r in result["routes"]],
+                "routes": _serialise_routes(result),
                 "forecast": result["all_days"],
             })
             if best_raw is None or result["best_temp"] > best_raw["best_temp"]:
@@ -82,7 +97,7 @@ def weather():
             "good_days_count": len(best_raw["good_days"]),
             "depart_date": best_raw["depart_date"],
             "return_date": best_raw["return_date"],
-            "routes": [list(r) for r in best_raw["routes"]],
+            "routes": _serialise_routes(best_raw),
             "forecast": best_raw["all_days"],
         }
 
