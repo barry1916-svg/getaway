@@ -106,8 +106,8 @@ def weather():
             if raw and (best_raw is None or raw["best_temp"] > best_raw["best_temp"]):
                 best_raw = raw
 
-    # Hottest destinations first
-    results.sort(key=lambda x: x["best_temp"], reverse=True)
+    # Most sunny days first, then hottest
+    results.sort(key=lambda x: (x["good_days_count"], x["best_temp"]), reverse=True)
 
     # Serialise fallback destination (shown when no results meet criteria)
     fallback = None
