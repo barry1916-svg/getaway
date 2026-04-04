@@ -51,7 +51,7 @@ def weather():
     # Return cached data if fresh
     if _cache["data"] is not None and (now - _cache["ts"]) < CACHE_TTL:
         resp = jsonify(_cache["data"])
-        resp.headers["Cache-Control"] = "public, s-maxage=3600"
+        resp.headers["Cache-Control"] = "public, max-age=0, s-maxage=3600"
         return resp
 
     # Pre-filter: only check destinations that have flights available this month
@@ -112,7 +112,7 @@ def weather():
     _cache["ts"] = now
 
     resp = jsonify(data)
-    resp.headers["Cache-Control"] = "public, s-maxage=3600"
+    resp.headers["Cache-Control"] = "public, max-age=0, s-maxage=3600"
     return resp
 
 
