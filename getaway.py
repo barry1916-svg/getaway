@@ -434,7 +434,7 @@ ROUTES = {
     "Montpellier": [("Ryanair", "Dublin", 4, 10)],
     "Biarritz": [("Ryanair", "Dublin", 5, 9)],
     "Carcassonne": [("Ryanair", "Dublin", 4, 10)],
-    "Beziers": [("Ryanair", "Dublin", 4, 10), ("Ryanair", "Shannon", 4, 10)],
+    "Beziers": [("Ryanair", "Dublin", 5, 9), ("Ryanair", "Shannon", 5, 9)],
     "Bergerac": [("Ryanair", "Dublin", 5, 9)],
     "La Rochelle": [("Ryanair", "Dublin", 5, 9)],
     "Perpignan": [("Ryanair", "Dublin", 5, 9)],
