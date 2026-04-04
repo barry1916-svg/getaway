@@ -331,7 +331,7 @@ ROUTES = {
     ],
     "Gran Canaria": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
-        ("Ryanair", "Cork", 1, 12)
+        ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 4, 10)
     ],
     "Lanzarote": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
@@ -366,16 +366,16 @@ ROUTES = {
         ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 4, 10), ("Ryanair", "Knock", 5, 9),
         ("Ryanair", "Kerry", 5, 9), ("Aer Lingus", "Cork", 4, 10), ("Aer Lingus", "Shannon", 4, 10)
     ],
-    "Funchal": [("Ryanair", "Dublin", 1, 12)],
-    "Ponta Delgada": [("Ryanair", "Dublin", 4, 10)],
+    "Funchal": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Shannon", 4, 10)],
+    "Ponta Delgada": [],  # Ryanair discontinued all Azores routes March 2026
     # Italy
     "Rome": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
         ("Ryanair", "Cork", 4, 10), ("Ryanair", "Shannon", 4, 10)
     ],
     "Milan": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Ryanair", "Cork", 4, 10)],
-    "Venice": [("Ryanair", "Dublin", 4, 10), ("Ryanair", "Shannon", 5, 9)],
-    "Naples": [("Ryanair", "Dublin", 1, 12)],
+    "Venice": [("Ryanair", "Dublin", 4, 10)],
+    "Naples": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Shannon", 4, 10)],
     "Pisa": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10)],
     "Bologna": [("Ryanair", "Dublin", 1, 12)],
     "Turin": [("Ryanair", "Dublin", 1, 12)],
@@ -395,7 +395,7 @@ ROUTES = {
     "Chania": [("Ryanair", "Dublin", 5, 9)],
     "Kos": [("Ryanair", "Dublin", 5, 9)],
     "Rhodes": [("Ryanair", "Dublin", 5, 9)],
-    "Corfu": [("Ryanair", "Dublin", 5, 9), ("Ryanair", "Shannon", 5, 9)],
+    "Corfu": [("Ryanair", "Dublin", 4, 10), ("Ryanair", "Shannon", 6, 10)],
     "Zakynthos": [("Ryanair", "Dublin", 5, 9)],
     "Kefalonia": [("Ryanair", "Dublin", 5, 9)],
     "Mykonos": [("Ryanair", "Dublin", 5, 9)],
@@ -418,7 +418,7 @@ ROUTES = {
     # Turkey
     "Antalya": [("Ryanair", "Dublin", 5, 10), ("Aer Lingus", "Dublin", 5, 10)],
     "Dalaman": [("Ryanair", "Dublin", 5, 10), ("Aer Lingus", "Dublin", 5, 10)],
-    "Bodrum": [("Ryanair", "Dublin", 5, 9)],
+    "Bodrum": [("Ryanair", "Dublin", 4, 10)],
     "Istanbul": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12)],
     # France
     "Nice": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10)],
@@ -431,7 +431,7 @@ ROUTES = {
     "Toulouse": [("Ryanair", "Dublin", 1, 12)],
     "Lyon": [("Ryanair", "Dublin", 1, 12)],
     "Nantes": [("Ryanair", "Dublin", 1, 12)],
-    "Montpellier": [("Ryanair", "Dublin", 4, 10)],
+    "Montpellier": [("Ryanair", "Dublin", 5, 9)],
     "Biarritz": [("Ryanair", "Dublin", 5, 9)],
     "Carcassonne": [("Ryanair", "Dublin", 4, 10)],
     "Beziers": [("Ryanair", "Dublin", 5, 9), ("Ryanair", "Shannon", 5, 9)],
