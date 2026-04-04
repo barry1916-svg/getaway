@@ -1093,17 +1093,19 @@ def check_destination_unconstrained(destination: Dict) -> Optional[Dict]:
     if len(all_forecast_days) < 7:
         return None
 
-    # Pick best window by avg_temp, no criteria gate
+    # Pick best window by (sunny_days, avg_temp), no criteria gate
     best_window = None
-    best_avg = -999.0
+    best_score = (-1, -999.0)
     for start_idx in range(len(all_forecast_days) - 6):
         window = all_forecast_days[start_idx:start_idx + 7]
         valid_temps = [d["temp"] for d in window if d["temp"] is not None]
         if not valid_temps:
             continue
+        sunny_count = sum(1 for d in window if d["code"] in GOOD_WEATHER_CODES)
         avg_temp = sum(valid_temps) / len(valid_temps)
-        if avg_temp > best_avg:
-            best_avg = avg_temp
+        score = (sunny_count, avg_temp)
+        if score > best_score:
+            best_score = score
             best_window = (start_idx, window)
 
     if best_window is None:

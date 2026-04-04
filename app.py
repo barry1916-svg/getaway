@@ -99,12 +99,16 @@ def weather():
                 "forecast": result["all_days"],
                 **_booking_links(result),
             })
-            if best_raw is None or result["best_temp"] > best_raw["best_temp"]:
+            raw_score = (len(result["good_days"]), result["best_temp"])
+            if best_raw is None or raw_score > (len(best_raw["good_days"]), best_raw["best_temp"]):
                 best_raw = result
         else:
             raw = getaway.check_destination_unconstrained(dest)
-            if raw and (best_raw is None or raw["best_temp"] > best_raw["best_temp"]):
-                best_raw = raw
+            if raw:
+                raw_score = (len(raw["good_days"]), raw["best_temp"])
+                best_score = (len(best_raw["good_days"]), best_raw["best_temp"]) if best_raw else (-1, -999)
+                if raw_score > best_score:
+                    best_raw = raw
 
     # Most sunny days first, then hottest
     results.sort(key=lambda x: (x["good_days_count"], x["best_temp"]), reverse=True)
