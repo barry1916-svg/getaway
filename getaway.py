@@ -347,14 +347,14 @@ ROUTES = {
     "Girona": [("Ryanair", "Dublin", 4, 10)],
     "Reus": [("Ryanair", "Dublin", 4, 10)],
     "Murcia": [("Ryanair", "Dublin", 1, 12)],
-    "Almeria": [("Ryanair", "Dublin", 4, 10)],
-    "Jerez": [("Ryanair", "Dublin", 4, 10)],
+    "Almeria": [],  # Ryanair DUB route discontinued
+    "Jerez": [],  # Ryanair closed Jerez base, route ended 2025
     "Santander": [("Ryanair", "Dublin", 1, 12)],
-    "Asturias": [("Ryanair", "Dublin", 4, 10)],
-    "Zaragoza": [("Ryanair", "Dublin", 4, 10)],
+    "Asturias": [],  # Ryanair ended all flights to Asturias
+    "Zaragoza": [],  # No direct Dublin service
     "Granada": [("Ryanair", "Dublin", 5, 9)],
-    "A Coruna": [("Ryanair", "Dublin", 4, 10)],
-    "Vigo": [("Ryanair", "Dublin", 4, 10)],
+    "A Coruna": [],  # No direct Dublin service
+    "Vigo": [],  # Ryanair suspended all Vigo flights Jan 2026
     # Portugal
     "Lisbon": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("TAP", "Dublin", 1, 12),
@@ -391,7 +391,7 @@ ROUTES = {
     # Greece
     "Athens": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10)],
     "Santorini": [("Ryanair", "Dublin", 5, 9)],
-    "Heraklion": [("Ryanair", "Dublin", 4, 10)],
+    "Heraklion": [("Aer Lingus", "Dublin", 5, 10)],
     "Chania": [("Ryanair", "Dublin", 5, 9)],
     "Kos": [("Ryanair", "Dublin", 5, 9)],
     "Rhodes": [("Ryanair", "Dublin", 5, 9)],
@@ -402,7 +402,7 @@ ROUTES = {
     "Preveza": [("Ryanair", "Dublin", 5, 9)],
     "Skiathos": [("Ryanair", "Dublin", 5, 9)],
     "Kalamata": [("Ryanair", "Dublin", 5, 9)],
-    "Thessaloniki": [("Ryanair", "Dublin", 4, 10)],
+    "Thessaloniki": [("Ryanair", "Dublin", 3, 10)],
     # Croatia
     "Split": [("Ryanair", "Dublin", 4, 10), ("Aer Lingus", "Dublin", 5, 9)],
     "Dubrovnik": [("Ryanair", "Dublin", 4, 10), ("Aer Lingus", "Dublin", 5, 9)],
@@ -422,18 +422,18 @@ ROUTES = {
     "Istanbul": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12)],
     # France
     "Nice": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10)],
-    "Marseille": [("Ryanair", "Dublin", 4, 10)],
+    "Marseille": [("Ryanair", "Dublin", 5, 10)],
     "Paris": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Air France", "Dublin", 1, 12),
         ("Aer Lingus", "Cork", 1, 12), ("Aer Lingus", "Shannon", 1, 12)
     ],
-    "Bordeaux": [("Ryanair", "Dublin", 4, 10), ("Ryanair", "Cork", 5, 9)],
+    "Bordeaux": [("Aer Lingus", "Dublin", 5, 10), ("Ryanair", "Cork", 5, 9)],
     "Toulouse": [("Ryanair", "Dublin", 1, 12)],
     "Lyon": [("Ryanair", "Dublin", 1, 12)],
     "Nantes": [("Ryanair", "Dublin", 1, 12)],
     "Montpellier": [("Ryanair", "Dublin", 5, 9)],
     "Biarritz": [("Ryanair", "Dublin", 5, 9)],
-    "Carcassonne": [("Ryanair", "Dublin", 4, 10)],
+    "Carcassonne": [("Ryanair", "Dublin", 5, 10)],
     "Beziers": [("Ryanair", "Dublin", 5, 9), ("Ryanair", "Shannon", 5, 9)],
     "Bergerac": [("Ryanair", "Dublin", 5, 9)],
     "La Rochelle": [("Ryanair", "Dublin", 5, 9)],
@@ -452,7 +452,7 @@ ROUTES = {
     "Prague": [("Ryanair", "Dublin", 1, 12)],
     "Vienna": [("Ryanair", "Dublin", 1, 12)],
     "Bratislava": [("Ryanair", "Dublin", 1, 12)],
-    "Ljubljana": [("Ryanair", "Dublin", 4, 10)],
+    "Ljubljana": [],  # No direct Dublin service (Ryanair negotiations ongoing but no deal)
     # Poland
     "Krakow": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 1, 12)],
     "Warsaw": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Cork", 1, 12)],
