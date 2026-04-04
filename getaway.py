@@ -352,7 +352,7 @@ ROUTES = {
     "Santander": [("Ryanair", "Dublin", 1, 12)],
     "Asturias": [("Ryanair", "Dublin", 4, 10)],
     "Zaragoza": [("Ryanair", "Dublin", 4, 10)],
-    "Granada": [("Ryanair", "Dublin", 4, 10)],
+    "Granada": [("Ryanair", "Dublin", 5, 9)],
     "A Coruna": [("Ryanair", "Dublin", 4, 10)],
     "Vigo": [("Ryanair", "Dublin", 4, 10)],
     # Portugal
