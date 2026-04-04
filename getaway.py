@@ -396,7 +396,7 @@ ROUTES = {
     "Alghero": [("Ryanair", "Dublin", 5, 9), ("Ryanair", "Cork", 5, 9)],
     # Sicily
     "Palermo": [("Ryanair", "Dublin", 1, 12)],
-    "Catania": [("Ryanair", "Dublin", 1, 12)],
+    "Catania": [],  # No direct flights from Ireland
     # Greece
     "Athens": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10)],
     "Santorini": [("Ryanair", "Dublin", 5, 9)],
