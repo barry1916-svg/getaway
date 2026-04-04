@@ -342,7 +342,7 @@ ROUTES = {
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
         ("Ryanair", "Cork", 1, 12)
     ],
-    "Bilbao": [("Ryanair", "Dublin", 1, 12)],
+    "Bilbao": [("Aer Lingus", "Dublin", 1, 12)],
     "Santiago de Compostela": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Shannon", 5, 9)],
     "Girona": [("Ryanair", "Dublin", 4, 10)],
     "Reus": [("Ryanair", "Dublin", 4, 10)],
