@@ -8,7 +8,7 @@ import os
 import sys
 import time
 from datetime import datetime
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -22,6 +22,26 @@ app = Flask(__name__)
 # Simple in-memory cache (persists across requests on Railway / local; not on Vercel)
 _cache = {"data": None, "ts": 0}
 CACHE_TTL = 3600  # 1 hour
+
+
+def _booking_links(result):
+    """Generate Skyscanner, Airbnb and Booking.com search URLs."""
+    city, country = result["city"], result["country"]
+    dep, ret = result["depart_date"], result["return_date"]
+    return {
+        "skyscanner_url": getaway.get_skyscanner_url("Dublin", city, dep, ret),
+        "airbnb_url": (
+            f"https://www.airbnb.com/s/{city}/homes"
+            f"?checkin={dep}&checkout={ret}"
+            f"&adults=2&room_types%5B%5D=Entire%20home%2Fapt&min_bedrooms=1"
+        ),
+        "booking_url": (
+            f"https://www.booking.com/searchresults.html"
+            f"?ss={city}%2C+{country}"
+            f"&checkin={dep}&checkout={ret}"
+            f"&group_adults=2&no_rooms=1"
+        ),
+    }
 
 
 def _serialise_routes(result):
@@ -48,8 +68,9 @@ def index():
 def weather():
     now = time.time()
 
-    # Return cached data if fresh
-    if _cache["data"] is not None and (now - _cache["ts"]) < CACHE_TTL:
+    # Return cached data if fresh (skip cache on ?refresh=1)
+    force = request.args.get("refresh") == "1"
+    if not force and _cache["data"] is not None and (now - _cache["ts"]) < CACHE_TTL:
         resp = jsonify(_cache["data"])
         resp.headers["Cache-Control"] = "public, max-age=0, s-maxage=3600"
         return resp
@@ -76,6 +97,7 @@ def weather():
                 "return_date": result["return_date"],
                 "routes": _serialise_routes(result),
                 "forecast": result["all_days"],
+                **_booking_links(result),
             })
             if best_raw is None or result["best_temp"] > best_raw["best_temp"]:
                 best_raw = result
@@ -99,6 +121,7 @@ def weather():
             "return_date": best_raw["return_date"],
             "routes": _serialise_routes(best_raw),
             "forecast": best_raw["all_days"],
+            **_booking_links(best_raw),
         }
 
     data = {

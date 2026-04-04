@@ -35,6 +35,13 @@
             margin-bottom: 16px;
         }
 
+        .header-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
         #last-updated {
             display: inline-block;
             background: rgba(255,255,255,0.22);
@@ -44,6 +51,21 @@
             font-weight: 600;
             letter-spacing: 0.2px;
         }
+
+        #refresh-btn {
+            background: rgba(255,255,255,0.22);
+            border: none;
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        #refresh-btn:hover { background: rgba(255,255,255,0.35); }
+        #refresh-btn:disabled { opacity: 0.5; cursor: default; }
 
         /* ── Main ── */
         main {
@@ -272,6 +294,34 @@
 
         .route-tag .airline { font-weight: 700; color: #333; }
 
+        /* Book links */
+        .book-links {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #F0F0F0;
+            flex-wrap: wrap;
+        }
+
+        .book-link {
+            flex: 1;
+            min-width: 80px;
+            text-align: center;
+            padding: 6px 8px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.15s;
+        }
+
+        .book-link:hover { opacity: 0.85; }
+        .book-link.skyscanner { background: #0770e3; }
+        .book-link.airbnb    { background: #FF5A5F; }
+        .book-link.booking   { background: #003580; }
+
         /* ── Responsive ── */
         @media (max-width: 600px) {
             header h1 { font-size: 2rem; }
@@ -284,7 +334,10 @@
 <header>
     <h1>☀️ Getaway</h1>
     <p class="subtitle">Direct flights from Ireland &nbsp;·&nbsp; Hottest destinations first</p>
-    <div id="last-updated">Checking weather…</div>
+    <div class="header-meta">
+        <div id="last-updated">Checking weather…</div>
+        <button id="refresh-btn" onclick="manualRefresh()" title="Refresh now">↻ Refresh</button>
+    </div>
 </header>
 
 <main>
@@ -357,6 +410,13 @@
 
         const sunnyText = `${dest.good_days_count} sunny day${dest.good_days_count !== 1 ? "s" : ""}`;
 
+        const bookHTML = `
+            <div class="book-links">
+                <a class="book-link skyscanner" href="${dest.skyscanner_url}" target="_blank" rel="noopener noreferrer">✈ Flights</a>
+                <a class="book-link airbnb"     href="${dest.airbnb_url}"     target="_blank" rel="noopener noreferrer">🏠 Stays</a>
+                <a class="book-link booking"    href="${dest.booking_url}"    target="_blank" rel="noopener noreferrer">🏨 Hotels</a>
+            </div>`;
+
         return `<div class="card">
             <div class="card-header">
                 <div class="city-info">
@@ -374,18 +434,27 @@
                 <div class="dates">✈️ <strong>${depart}</strong>&nbsp;—&nbsp;<strong>${ret}</strong></div>
                 <div class="forecast-strip">${forecastHTML}</div>
                 <div class="routes">${routesHTML}</div>
+                ${bookHTML}
             </div>
         </div>`;
     }
 
-    async function loadWeather() {
+    async function loadWeather(force = false) {
+        const url = force ? "/api/weather?refresh=1" : "/api/weather";
         try {
-            const res = await fetch("/api/weather");
+            const res = await fetch(url);
             if (!res.ok) throw new Error("API error " + res.status);
             const data = await res.json();
 
             document.getElementById("loading").style.display = "none";
             document.getElementById("last-updated").textContent = "Updated " + data.updated_at;
+
+            // Reset state
+            document.getElementById("no-results").style.display = "none";
+            document.getElementById("error").style.display = "none";
+            document.getElementById("stats-bar").style.display = "none";
+            document.getElementById("grid").style.display = "none";
+            document.getElementById("grid").innerHTML = "";
 
             if (!data.destinations || data.destinations.length === 0) {
                 const noResults = document.getElementById("no-results");
@@ -393,23 +462,33 @@
                 if (data.fallback) {
                     document.getElementById("fallback-card").innerHTML = renderCard(data.fallback);
                 }
-                return;
+            } else {
+                const statsBar = document.getElementById("stats-bar");
+                statsBar.style.display = "flex";
+                document.getElementById("result-count").textContent =
+                    `${data.count} destination${data.count !== 1 ? "s" : ""} with great weather right now`;
+
+                const grid = document.getElementById("grid");
+                grid.style.display = "grid";
+                grid.innerHTML = data.destinations.map(renderCard).join("");
             }
 
-            const statsBar = document.getElementById("stats-bar");
-            statsBar.style.display = "flex";
-            document.getElementById("result-count").textContent =
-                `${data.count} destination${data.count !== 1 ? "s" : ""} with great weather right now`;
-
-            const grid = document.getElementById("grid");
-            grid.style.display = "grid";
-            grid.innerHTML = data.destinations.map(renderCard).join("");
+            // Schedule silent auto-refresh in 1 hour
+            setTimeout(() => loadWeather(false), 60 * 60 * 1000);
 
         } catch (e) {
             document.getElementById("loading").style.display = "none";
             document.getElementById("error").style.display = "block";
             document.getElementById("last-updated").textContent = "Failed to load";
         }
+    }
+
+    async function manualRefresh() {
+        const btn = document.getElementById("refresh-btn");
+        btn.disabled = true;
+        document.getElementById("last-updated").textContent = "Refreshing…";
+        await loadWeather(true);
+        btn.disabled = false;
     }
 
     loadWeather();
