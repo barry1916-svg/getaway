@@ -316,7 +316,7 @@ ROUTES = {
         ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 1, 12), ("Ryanair", "Knock", 5, 9),
         ("Aer Lingus", "Cork", 4, 10), ("Aer Lingus", "Shannon", 4, 10)
     ],
-    "Seville": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Cork", 4, 10)],
+    "Seville": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Ryanair", "Cork", 4, 10)],
     "Valencia": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Cork", 4, 10)],
     "Alicante": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
@@ -348,8 +348,8 @@ ROUTES = {
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
         ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 4, 10)
     ],
-    "Bilbao": [("Aer Lingus", "Dublin", 1, 12), ("Aer Lingus", "Cork", 1, 12)],
-    "Santiago de Compostela": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Shannon", 5, 9), ("Aer Lingus", "Cork", 6, 10)],
+    "Bilbao": [("Aer Lingus", "Dublin", 4, 10), ("Aer Lingus", "Cork", 4, 10)],
+    "Santiago de Compostela": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 5, 10), ("Ryanair", "Shannon", 5, 9), ("Aer Lingus", "Cork", 6, 10)],
     "Girona": [("Ryanair", "Dublin", 4, 10), ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 4, 10), ("Ryanair", "Knock", 5, 9)],
     "Reus": [("Ryanair", "Dublin", 4, 10), ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 4, 10)],
     "Murcia": [("Ryanair", "Dublin", 1, 12)],
@@ -383,13 +383,13 @@ ROUTES = {
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
         ("Ryanair", "Cork", 4, 10), ("Ryanair", "Knock", 4, 10)
     ],
-    "Venice": [("Ryanair", "Dublin", 4, 10), ("Ryanair", "Cork", 1, 12)],
-    "Naples": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Shannon", 4, 10)],
+    "Venice": [("Ryanair", "Dublin", 4, 10), ("Aer Lingus", "Dublin", 4, 10), ("Ryanair", "Cork", 1, 12)],
+    "Naples": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10), ("Ryanair", "Shannon", 4, 10)],
     "Pisa": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10), ("Ryanair", "Cork", 1, 12)],
     "Bologna": [("Ryanair", "Dublin", 1, 12)],
-    "Turin": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Shannon", 1, 12)],
+    "Turin": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10), ("Ryanair", "Shannon", 1, 12)],
     "Bari": [("Ryanair", "Dublin", 4, 10)],
-    "Verona": [("Ryanair", "Dublin", 4, 10)],
+    "Verona": [("Ryanair", "Dublin", 4, 10), ("Aer Lingus", "Dublin", 4, 10)],
     # Sardinia
     "Cagliari": [("Ryanair", "Dublin", 4, 10)],
 
@@ -398,13 +398,13 @@ ROUTES = {
     "Palermo": [("Ryanair", "Dublin", 1, 12)],
     "Catania": [("Aer Lingus", "Dublin", 4, 10)],
     # Greece
-    "Athens": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10)],
-    "Santorini": [("Ryanair", "Dublin", 5, 9)],
+    "Athens": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12)],
+    "Santorini": [("Ryanair", "Dublin", 5, 9), ("Aer Lingus", "Dublin", 5, 9)],
     "Heraklion": [("Aer Lingus", "Dublin", 5, 10), ("Aer Lingus", "Cork", 6, 9)],
     "Chania": [("Ryanair", "Dublin", 5, 9)],
     "Kos": [("Ryanair", "Dublin", 5, 9)],
-    "Rhodes": [("Ryanair", "Dublin", 5, 9), ("Ryanair", "Cork", 5, 10)],
-    "Corfu": [("Ryanair", "Dublin", 4, 10), ("Ryanair", "Shannon", 6, 10)],
+    "Rhodes": [("Ryanair", "Dublin", 5, 9), ("Aer Lingus", "Dublin", 5, 9), ("Ryanair", "Cork", 5, 10)],
+    "Corfu": [("Ryanair", "Dublin", 4, 10), ("Aer Lingus", "Dublin", 5, 9), ("Ryanair", "Shannon", 6, 10)],
     "Zakynthos": [("Ryanair", "Dublin", 5, 9)],
     "Kefalonia": [("Ryanair", "Dublin", 5, 9)],
     "Mykonos": [("Ryanair", "Dublin", 5, 9)],
@@ -430,15 +430,15 @@ ROUTES = {
     "Bodrum": [("Ryanair", "Dublin", 4, 10)],
     "Istanbul": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12)],
     # France
-    "Nice": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10), ("Aer Lingus", "Cork", 5, 9)],
+    "Nice": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Aer Lingus", "Cork", 5, 9)],
     "Marseille": [("Ryanair", "Dublin", 5, 10)],
     "Paris": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Air France", "Dublin", 1, 12),
         ("Aer Lingus", "Cork", 1, 12), ("Aer Lingus", "Shannon", 1, 12)
     ],
     "Bordeaux": [("Aer Lingus", "Dublin", 5, 10), ("Ryanair", "Cork", 5, 9), ("Aer Lingus", "Cork", 5, 9)],
-    "Toulouse": [("Ryanair", "Dublin", 1, 12)],
-    "Lyon": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Cork", 1, 12)],
+    "Toulouse": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10)],
+    "Lyon": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Aer Lingus", "Cork", 1, 12)],
     "Nantes": [("Ryanair", "Dublin", 1, 12)],
     "Montpellier": [("Ryanair", "Dublin", 5, 9)],
     "Biarritz": [("Ryanair", "Dublin", 5, 9)],
@@ -457,14 +457,14 @@ ROUTES = {
     "Geneva": [("Aer Lingus", "Dublin", 1, 12)],
     "Zurich": [("Aer Lingus", "Dublin", 1, 12), ("Swiss", "Dublin", 1, 12)],
     # Central Europe
-    "Budapest": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Shannon", 4, 10)],
-    "Prague": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Cork", 1, 12)],
-    "Vienna": [("Ryanair", "Dublin", 1, 12)],
+    "Budapest": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Ryanair", "Shannon", 4, 10)],
+    "Prague": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Aer Lingus", "Cork", 1, 12)],
+    "Vienna": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12)],
     "Bratislava": [("Ryanair", "Dublin", 1, 12)],
     "Ljubljana": [],  # No direct Dublin service (Ryanair negotiations ongoing but no deal)
     # Poland
     "Krakow": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 1, 12)],
-    "Warsaw": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 1, 12)],
+    "Warsaw": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 1, 12)],
     # Nordics
     "Stockholm": [("Ryanair", "Dublin", 1, 12)],
     "Copenhagen": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("SAS", "Dublin", 1, 12)],
@@ -478,7 +478,7 @@ ROUTES = {
     "Sofia": [("Ryanair", "Dublin", 1, 12)],
     "Bucharest": [("Ryanair", "Dublin", 1, 12)],
     # Malta
-    "Malta": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10), ("Ryanair", "Cork", 4, 10)],
+    "Malta": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Ryanair", "Cork", 4, 10)],
 }
 
 
