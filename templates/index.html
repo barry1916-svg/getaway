@@ -141,9 +141,11 @@
         .no-match-header h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; color: #1a1a1a; }
         .no-match-header p { color: #888; margin-bottom: 0; }
 
-        #fallback-card {
-            max-width: 380px;
-            margin: 0 auto 40px;
+        #fallback-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 22px;
+            margin-bottom: 40px;
         }
 
         /* ── Card grid ── */
@@ -356,9 +358,9 @@
         <div class="no-match-header">
             <div class="emoji">🌧️</div>
             <h2>Nowhere sunny enough today</h2>
-            <p>No destinations hit the criteria right now — but here's the closest thing:</p>
+            <p>No destinations hit the criteria right now — here are the best available:</p>
         </div>
-        <div id="fallback-card"></div>
+        <div id="fallback-grid"></div>
     </div>
 
     <div id="stats-bar">
@@ -460,8 +462,8 @@
             if (!data.destinations || data.destinations.length === 0) {
                 const noResults = document.getElementById("no-results");
                 noResults.style.display = "block";
-                if (data.fallback) {
-                    document.getElementById("fallback-card").innerHTML = renderCard(data.fallback);
+                if (data.fallback && data.fallback.length > 0) {
+                    document.getElementById("fallback-grid").innerHTML = data.fallback.map(renderCard).join("");
                 }
             } else {
                 const statsBar = document.getElementById("stats-bar");

@@ -83,7 +83,7 @@ def weather():
     ]
 
     results = []
-    best_raw = None  # best destination regardless of criteria (for no-match fallback)
+    raw_candidates = []  # all destinations regardless of criteria (for fallback)
 
     for dest in active:
         result = getaway.check_destination(dest)
@@ -99,34 +99,31 @@ def weather():
                 "forecast": result["all_days"],
                 **_booking_links(result),
             })
-            raw_score = (len(result["good_days"]), result["best_temp"])
-            if best_raw is None or raw_score > (len(best_raw["good_days"]), best_raw["best_temp"]):
-                best_raw = result
+            raw_candidates.append(result)
         else:
             raw = getaway.check_destination_unconstrained(dest)
             if raw:
-                raw_score = (len(raw["good_days"]), raw["best_temp"])
-                best_score = (len(best_raw["good_days"]), best_raw["best_temp"]) if best_raw else (-1, -999)
-                if raw_score > best_score:
-                    best_raw = raw
+                raw_candidates.append(raw)
 
     # Most sunny days first, then hottest
     results.sort(key=lambda x: (x["good_days_count"], x["best_temp"]), reverse=True)
 
-    # Serialise fallback destination (shown when no results meet criteria)
-    fallback = None
-    if not results and best_raw:
-        fallback = {
-            "city": best_raw["city"],
-            "country": best_raw["country"],
-            "best_temp": round(best_raw["best_temp"], 1),
-            "good_days_count": len(best_raw["good_days"]),
-            "depart_date": best_raw["depart_date"],
-            "return_date": best_raw["return_date"],
-            "routes": _serialise_routes(best_raw),
-            "forecast": best_raw["all_days"],
-            **_booking_links(best_raw),
-        }
+    # Top 5 fallback destinations when nothing meets the criteria
+    fallback = []
+    if not results:
+        raw_candidates.sort(key=lambda x: (len(x["good_days"]), x["best_temp"]), reverse=True)
+        for raw in raw_candidates[:5]:
+            fallback.append({
+                "city": raw["city"],
+                "country": raw["country"],
+                "best_temp": round(raw["best_temp"], 1),
+                "good_days_count": len(raw["good_days"]),
+                "depart_date": raw["depart_date"],
+                "return_date": raw["return_date"],
+                "routes": _serialise_routes(raw),
+                "forecast": raw["all_days"],
+                **_booking_links(raw),
+            })
 
     data = {
         "destinations": results,
