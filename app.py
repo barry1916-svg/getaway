@@ -7,6 +7,7 @@ Deployed on Railway via the Procfile.
 import os
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from flask import Flask, jsonify, render_template, request
 from dotenv import load_dotenv
@@ -85,25 +86,32 @@ def weather():
     results = []
     raw_candidates = []  # all destinations regardless of criteria (for fallback)
 
-    for dest in active:
+    def _check(dest):
         result = getaway.check_destination(dest)
         if result:
-            results.append({
-                "city": result["city"],
-                "country": result["country"],
-                "best_temp": round(result["best_temp"], 1),
-                "good_days_count": len(result["good_days"]),
-                "depart_date": result["depart_date"],
-                "return_date": result["return_date"],
-                "routes": _serialise_routes(result),
-                "forecast": result["all_days"],
-                **_booking_links(result),
-            })
-            raw_candidates.append(result)
-        else:
-            raw = getaway.check_destination_unconstrained(dest)
-            if raw:
-                raw_candidates.append(raw)
+            return ("ok", result)
+        raw = getaway.check_destination_unconstrained(dest)
+        return ("raw", raw)
+
+    with ThreadPoolExecutor(max_workers=20) as pool:
+        futures = {pool.submit(_check, dest): dest for dest in active}
+        for future in as_completed(futures):
+            kind, data_ = future.result()
+            if kind == "ok":
+                results.append({
+                    "city": data_["city"],
+                    "country": data_["country"],
+                    "best_temp": round(data_["best_temp"], 1),
+                    "good_days_count": len(data_["good_days"]),
+                    "depart_date": data_["depart_date"],
+                    "return_date": data_["return_date"],
+                    "routes": _serialise_routes(data_),
+                    "forecast": data_["all_days"],
+                    **_booking_links(data_),
+                })
+                raw_candidates.append(data_)
+            elif data_:
+                raw_candidates.append(data_)
 
     # Most sunny days first, then hottest
     results.sort(key=lambda x: (x["good_days_count"], x["best_temp"]), reverse=True)
