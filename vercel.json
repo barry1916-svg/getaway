@@ -11,8 +11,5 @@
   "crons": [
     { "path": "/api/run", "schedule": "0 7 * * *" },
     { "path": "/api/run", "schedule": "0 19 * * *" }
-  ],
-  "functions": {
-    "app.py": { "maxDuration": 60 }
-  }
+  ]
 }
