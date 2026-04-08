@@ -309,7 +309,7 @@ ROUTES = {
     ],
     "Madrid": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Iberia", "Dublin", 1, 12),
-        ("Ryanair", "Cork", 4, 10), ("Ryanair", "Shannon", 1, 12)
+        ("Ryanair", "Shannon", 1, 12)
     ],
     "Malaga": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
