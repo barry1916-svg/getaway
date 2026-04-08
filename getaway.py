@@ -508,10 +508,10 @@ RAIN_CODES = {51, 53, 55, 61, 63, 65, 80, 81, 82, 95}
 MIN_TEMP = 22.0
 
 # Minimum sunny days required
-MIN_SUNNY_DAYS = 5
+MIN_SUNNY_DAYS = 4
 
 # Minimum warm days required (days above MIN_TEMP)
-MIN_WARM_DAYS = 5
+MIN_WARM_DAYS = 4
 
 
 def get_weather_forecast(lat: float, lon: float) -> Optional[Dict]:
