@@ -95,10 +95,10 @@ def weather():
     # Best weather first: most sunny days, then hottest
     candidates.sort(key=lambda x: (len(x["good_days"]), x["best_temp"]), reverse=True)
 
-    # Always include Santiago de Compostela; fill remaining 9 slots with best weather
+    # Always include Santiago de Compostela; fill remaining 11 slots with best weather
     pinned = [r for r in candidates if r["city"] == "Santiago de Compostela"]
     others = [r for r in candidates if r["city"] != "Santiago de Compostela"]
-    top = others[:10 - len(pinned)] + pinned
+    top = others[:12 - len(pinned)] + pinned
 
     destinations = [
         {
