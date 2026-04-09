@@ -118,8 +118,8 @@
             color: #bbb;
         }
 
-        /* ── Error / No results ── */
-        #error, #no-results {
+        /* ── Error ── */
+        #error {
             display: none;
         }
 
@@ -131,22 +131,6 @@
         #error .emoji { font-size: 3rem; margin-bottom: 14px; }
         #error h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
         #error p { color: #888; }
-
-        .no-match-header {
-            text-align: center;
-            padding: 40px 20px 28px;
-        }
-
-        .no-match-header .emoji { font-size: 3rem; margin-bottom: 14px; }
-        .no-match-header h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; color: #1a1a1a; }
-        .no-match-header p { color: #888; margin-bottom: 0; }
-
-        #fallback-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 22px;
-            margin-bottom: 40px;
-        }
 
         /* ── Card grid ── */
         #grid {
@@ -335,7 +319,7 @@
 
 <header>
     <h1>☀️ Getaway</h1>
-    <p class="subtitle">Direct flights from Ireland &nbsp;·&nbsp; Sunniest destinations first</p>
+    <p class="subtitle">Direct flights from Ireland &nbsp;·&nbsp; Best weather right now</p>
     <div class="header-meta">
         <div id="last-updated">Checking weather…</div>
         <button id="refresh-btn" onclick="manualRefresh()" title="Refresh now">↻ Refresh</button>
@@ -352,15 +336,6 @@
         <div class="emoji">😕</div>
         <h2>Couldn't load weather data</h2>
         <p>Please try again later.</p>
-    </div>
-
-    <div id="no-results">
-        <div class="no-match-header">
-            <div class="emoji">🌧️</div>
-            <h2>Nowhere sunny enough today</h2>
-            <p>No destinations hit the criteria right now — here are the best available:</p>
-        </div>
-        <div id="fallback-grid"></div>
     </div>
 
     <div id="stats-bar">
@@ -453,28 +428,19 @@
             document.getElementById("last-updated").textContent = "Updated " + data.updated_at;
 
             // Reset state
-            document.getElementById("no-results").style.display = "none";
             document.getElementById("error").style.display = "none";
             document.getElementById("stats-bar").style.display = "none";
             document.getElementById("grid").style.display = "none";
             document.getElementById("grid").innerHTML = "";
 
-            if (!data.destinations || data.destinations.length === 0) {
-                const noResults = document.getElementById("no-results");
-                noResults.style.display = "block";
-                if (data.fallback && data.fallback.length > 0) {
-                    document.getElementById("fallback-grid").innerHTML = data.fallback.map(renderCard).join("");
-                }
-            } else {
-                const statsBar = document.getElementById("stats-bar");
-                statsBar.style.display = "flex";
-                document.getElementById("result-count").textContent =
-                    `${data.count} destination${data.count !== 1 ? "s" : ""} with great weather right now`;
+            const statsBar = document.getElementById("stats-bar");
+            statsBar.style.display = "flex";
+            document.getElementById("result-count").textContent =
+                `Top ${data.count} destinations by weather right now`;
 
-                const grid = document.getElementById("grid");
-                grid.style.display = "grid";
-                grid.innerHTML = data.destinations.map(renderCard).join("");
-            }
+            const grid = document.getElementById("grid");
+            grid.style.display = "grid";
+            grid.innerHTML = data.destinations.map(renderCard).join("");
 
             // Schedule silent auto-refresh in 1 hour
             setTimeout(() => loadWeather(false), 60 * 60 * 1000);

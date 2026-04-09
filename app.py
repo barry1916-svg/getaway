@@ -83,61 +83,37 @@ def weather():
         if getaway.get_available_routes(d["city"], current_month)
     ]
 
-    results = []
-    raw_candidates = []  # all destinations regardless of criteria (for fallback)
-
-    def _check(dest):
-        result = getaway.check_destination(dest)
-        if result:
-            return ("ok", result)
-        raw = getaway.check_destination_unconstrained(dest)
-        return ("raw", raw)
+    candidates = []
 
     with ThreadPoolExecutor(max_workers=20) as pool:
-        futures = {pool.submit(_check, dest): dest for dest in active}
+        futures = {pool.submit(getaway.check_destination_unconstrained, dest): dest for dest in active}
         for future in as_completed(futures):
-            kind, data_ = future.result()
-            if kind == "ok":
-                results.append({
-                    "city": data_["city"],
-                    "country": data_["country"],
-                    "best_temp": round(data_["best_temp"], 1),
-                    "good_days_count": len(data_["good_days"]),
-                    "depart_date": data_["depart_date"],
-                    "return_date": data_["return_date"],
-                    "routes": _serialise_routes(data_),
-                    "forecast": data_["all_days"],
-                    **_booking_links(data_),
-                })
-                raw_candidates.append(data_)
-            elif data_:
-                raw_candidates.append(data_)
+            result = future.result()
+            if result:
+                candidates.append(result)
 
-    # Most sunny days first, then hottest
-    results.sort(key=lambda x: (x["good_days_count"], x["best_temp"]), reverse=True)
+    # Best weather first: most sunny days, then hottest
+    candidates.sort(key=lambda x: (len(x["good_days"]), x["best_temp"]), reverse=True)
 
-    # Top 5 fallback destinations when nothing meets the criteria
-    fallback = []
-    if not results:
-        raw_candidates.sort(key=lambda x: (len(x["good_days"]), x["best_temp"]), reverse=True)
-        for raw in raw_candidates[:5]:
-            fallback.append({
-                "city": raw["city"],
-                "country": raw["country"],
-                "best_temp": round(raw["best_temp"], 1),
-                "good_days_count": len(raw["good_days"]),
-                "depart_date": raw["depart_date"],
-                "return_date": raw["return_date"],
-                "routes": _serialise_routes(raw),
-                "forecast": raw["all_days"],
-                **_booking_links(raw),
-            })
+    destinations = [
+        {
+            "city": r["city"],
+            "country": r["country"],
+            "best_temp": round(r["best_temp"], 1),
+            "good_days_count": len(r["good_days"]),
+            "depart_date": r["depart_date"],
+            "return_date": r["return_date"],
+            "routes": _serialise_routes(r),
+            "forecast": r["all_days"],
+            **_booking_links(r),
+        }
+        for r in candidates[:10]
+    ]
 
     data = {
-        "destinations": results,
-        "fallback": fallback,
+        "destinations": destinations,
         "updated_at": datetime.utcnow().strftime("%d %b %Y, %H:%M UTC"),
-        "count": len(results),
+        "count": len(destinations),
     }
 
     _cache["data"] = data
