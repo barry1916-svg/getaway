@@ -95,8 +95,16 @@ def weather():
     # Best weather first: most sunny days, then hottest
     candidates.sort(key=lambda x: (len(x["good_days"]), x["best_temp"]), reverse=True)
 
-    # Always include Santiago de Compostela; fill remaining 11 slots with best weather
+    # Always include Santiago de Compostela; fetch directly if it didn't make candidates
     pinned = [r for r in candidates if r["city"] == "Santiago de Compostela"]
+    if not pinned:
+        santiago_dest = next(
+            (d for d in getaway.DESTINATIONS if d["city"] == "Santiago de Compostela"), None
+        )
+        if santiago_dest:
+            result = getaway.check_destination_unconstrained(santiago_dest)
+            if result:
+                pinned = [result]
     others = [r for r in candidates if r["city"] != "Santiago de Compostela"]
     top = others[:12 - len(pinned)] + pinned
 
