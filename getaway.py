@@ -278,8 +278,8 @@ def get_booking_url(airline: str, origin: str, destination: str, depart_date: st
     elif airline == "Aer Lingus":
         return (
             f"https://www.aerlingus.com/app/make/flight-search-result"
-            f"?departureDate_0={depart_date}&sourceAirportCode_0={origin_code}&destinationAirportCode_0={dest_code}"
-            f"&departureDate_1={return_date}&sourceAirportCode_1={dest_code}&destinationAirportCode_1={origin_code}"
+            f"?departureDate_0={depart_date}&destinationAirportCode_0={dest_code}&sourceAirportCode_0={origin_code}"
+            f"&departureDate_1={return_date}&destinationAirportCode_1={origin_code}&sourceAirportCode_1={dest_code}"
             f"&fareCategory=ECONOMY&fareType=RETURN&groupBooking=false&promoCode=&numAdults=1&numChildren=0&numInfants=0&numYoungAdults=0"
         )
 
