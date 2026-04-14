@@ -273,7 +273,7 @@ def get_booking_url(airline: str, origin: str, destination: str, depart_date: st
     dest_code = DESTINATION_AIRPORTS.get(destination, "")
 
     if airline == "Ryanair":
-        return f"https://www.ryanair.com/gb/en/trip/flights/select?adults=1&teens=0&children=0&infants=0&dateOut={depart_date}&dateIn={return_date}&originIata={origin_code}&destinationIata={dest_code}&isReturn=true"
+        return f"https://www.ryanair.com/gb/en/booking/home?ADT=1&TEEN=0&CHD=0&INF=0&OriginIata={origin_code}&DestinationIata={dest_code}&DateOut={depart_date}&DateIn={return_date}&isReturn=true"
 
     elif airline == "Aer Lingus":
         return "https://www.aerlingus.com"
