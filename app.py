@@ -82,14 +82,13 @@ def weather():
         if getaway.get_available_routes(d["city"], current_month)
     ]
 
-    # Fetch all forecasts in one API call to avoid rate-limiting
+    # Fetch all forecasts in batches to avoid rate-limiting
     forecasts = getaway.get_weather_forecasts_bulk(active)
     candidates = []
-    if forecasts:
-        for dest, forecast in zip(active, forecasts):
-            result = getaway.check_destination_from_forecast(dest, forecast)
-            if result:
-                candidates.append(result)
+    for dest, forecast in zip(active, forecasts):
+        result = getaway.check_destination_from_forecast(dest, forecast)
+        if result:
+            candidates.append(result)
 
     # Best weather first: most sunny days, then hottest
     candidates.sort(key=lambda x: (len(x["good_days"]), x["best_temp"]), reverse=True)

@@ -540,30 +540,44 @@ def get_weather_forecast(lat: float, lon: float) -> Optional[Dict]:
         return None
 
 
-def get_weather_forecasts_bulk(destinations: list) -> Optional[list]:
-    """Fetch forecasts for all destinations in a single API call to avoid rate limiting."""
-    url = "https://api.open-meteo.com/v1/forecast"
+def get_weather_forecasts_bulk(destinations: list, batch_size: int = 30) -> list:
+    """Fetch forecasts in batches to avoid rate limiting and URL length limits.
+
+    Returns a list of forecast dicts (or None entries for failed fetches)
+    aligned 1-to-1 with the input destinations list.
+    """
     start_date = datetime.now() + timedelta(days=FORECAST_START_OFFSET)
     end_date = start_date + timedelta(days=9)
+    url = "https://api.open-meteo.com/v1/forecast"
 
-    params = {
-        "latitude": ",".join(str(d["lat"]) for d in destinations),
-        "longitude": ",".join(str(d["lon"]) for d in destinations),
-        "daily": "temperature_2m_max,weather_code",
-        "timezone": "auto",
-        "start_date": start_date.strftime("%Y-%m-%d"),
-        "end_date": end_date.strftime("%Y-%m-%d"),
-    }
+    all_forecasts = []
+    for i in range(0, len(destinations), batch_size):
+        batch = destinations[i:i + batch_size]
+        params = {
+            "latitude": ",".join(str(d["lat"]) for d in batch),
+            "longitude": ",".join(str(d["lon"]) for d in batch),
+            "daily": "temperature_2m_max,weather_code",
+            "timezone": "UTC",
+            "start_date": start_date.strftime("%Y-%m-%d"),
+            "end_date": end_date.strftime("%Y-%m-%d"),
+        }
+        try:
+            resp = requests.get(url, params=params, timeout=15)
+            resp.raise_for_status()
+            data = resp.json()
+            if isinstance(data, list):
+                all_forecasts.extend(data)
+            elif isinstance(data, dict) and "daily" in data:
+                # Single-location response (batch of 1)
+                all_forecasts.append(data)
+            else:
+                print(f"  Unexpected bulk response for batch {i}: {data}")
+                all_forecasts.extend([None] * len(batch))
+        except requests.RequestException as e:
+            print(f"  Bulk weather fetch error batch {i}: {e}")
+            all_forecasts.extend([None] * len(batch))
 
-    try:
-        response = requests.get(url, params=params, timeout=30)
-        response.raise_for_status()
-        data = response.json()
-        # API returns a list for multiple locations, single dict for one
-        return data if isinstance(data, list) else [data]
-    except requests.RequestException as e:
-        print(f"  Bulk weather fetch error: {e}")
-        return None
+    return all_forecasts
 
 
 def check_destination(destination: Dict) -> Optional[Dict]:
