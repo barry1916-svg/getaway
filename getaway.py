@@ -540,6 +540,32 @@ def get_weather_forecast(lat: float, lon: float) -> Optional[Dict]:
         return None
 
 
+def get_weather_forecasts_bulk(destinations: list) -> Optional[list]:
+    """Fetch forecasts for all destinations in a single API call to avoid rate limiting."""
+    url = "https://api.open-meteo.com/v1/forecast"
+    start_date = datetime.now() + timedelta(days=FORECAST_START_OFFSET)
+    end_date = start_date + timedelta(days=9)
+
+    params = {
+        "latitude": ",".join(str(d["lat"]) for d in destinations),
+        "longitude": ",".join(str(d["lon"]) for d in destinations),
+        "daily": "temperature_2m_max,weather_code",
+        "timezone": "auto",
+        "start_date": start_date.strftime("%Y-%m-%d"),
+        "end_date": end_date.strftime("%Y-%m-%d"),
+    }
+
+    try:
+        response = requests.get(url, params=params, timeout=30)
+        response.raise_for_status()
+        data = response.json()
+        # API returns a list for multiple locations, single dict for one
+        return data if isinstance(data, list) else [data]
+    except requests.RequestException as e:
+        print(f"  Bulk weather fetch error: {e}")
+        return None
+
+
 def check_destination(destination: Dict) -> Optional[Dict]:
     """Check if a destination has good weather, finding best 7-day window in 10-day forecast."""
     forecast = get_weather_forecast(destination["lat"], destination["lon"])
@@ -1071,6 +1097,11 @@ def send_email(html_content: str, num_destinations: int, subject: str = None) ->
 def check_destination_unconstrained(destination: Dict) -> Optional[Dict]:
     """Find the best 7-day window for a destination regardless of weather criteria thresholds."""
     forecast = get_weather_forecast(destination["lat"], destination["lon"])
+    return check_destination_from_forecast(destination, forecast)
+
+
+def check_destination_from_forecast(destination: Dict, forecast: Optional[Dict]) -> Optional[Dict]:
+    """Process a pre-fetched forecast for a destination (avoids redundant API calls)."""
     if not forecast or "daily" not in forecast:
         return None
 

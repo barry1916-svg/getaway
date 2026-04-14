@@ -7,7 +7,6 @@ Deployed on Railway via the Procfile.
 import os
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from flask import Flask, jsonify, render_template, request
 from dotenv import load_dotenv
@@ -83,12 +82,12 @@ def weather():
         if getaway.get_available_routes(d["city"], current_month)
     ]
 
+    # Fetch all forecasts in one API call to avoid rate-limiting
+    forecasts = getaway.get_weather_forecasts_bulk(active)
     candidates = []
-
-    with ThreadPoolExecutor(max_workers=20) as pool:
-        futures = {pool.submit(getaway.check_destination_unconstrained, dest): dest for dest in active}
-        for future in as_completed(futures):
-            result = future.result()
+    if forecasts:
+        for dest, forecast in zip(active, forecasts):
+            result = getaway.check_destination_from_forecast(dest, forecast)
             if result:
                 candidates.append(result)
 
