@@ -276,7 +276,12 @@ def get_booking_url(airline: str, origin: str, destination: str, depart_date: st
         return f"https://www.ryanair.com/gb/en/trip/flights/select?adults=1&teens=0&children=0&infants=0&dateOut={depart_date}&dateIn={return_date}&isReturn=true&discount=0&promoCode=&isConnectedFlight=false&originIata={origin_code}&destinationIata={dest_code}"
 
     elif airline == "Aer Lingus":
-        return "https://www.aerlingus.com"
+        return (
+            f"https://www.aerlingus.com/app/make/flight-search-result"
+            f"?departureDate_0={depart_date}&sourceAirportCode_0={origin_code}&destinationAirportCode_0={dest_code}"
+            f"&departureDate_1={return_date}&sourceAirportCode_1={dest_code}&destinationAirportCode_1={origin_code}"
+            f"&fareCategory=ECONOMY&fareType=RETURN&groupBooking=false&promoCode=&numAdults=1&numChildren=0&numInfants=0&numYoungAdults=0"
+        )
 
     elif airline == "Iberia":
         return f"https://www.iberia.com/gb/?FLIGHT_ORIGIN={origin_code}&FLIGHT_DESTINATION={dest_code}&FLIGHT_DATE_1={depart_date}&FLIGHT_DATE_2={return_date}&adults=1"
