@@ -382,7 +382,7 @@ ROUTES = {
         ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 4, 10), ("Ryanair", "Knock", 5, 9),
         ("Ryanair", "Kerry", 5, 9), ("Aer Lingus", "Cork", 4, 10), ("Aer Lingus", "Shannon", 4, 10)
     ],
-    "Funchal": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Shannon", 4, 10)],
+    "Funchal": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Ryanair", "Shannon", 4, 10)],
     "Ponta Delgada": [],  # Ryanair discontinued all Azores routes March 2026
     # Italy
     "Rome": [
@@ -406,7 +406,7 @@ ROUTES = {
     "Alghero": [("Ryanair", "Dublin", 5, 9), ("Ryanair", "Cork", 5, 9)],
     # Sicily
     "Palermo": [("Ryanair", "Dublin", 1, 12)],
-    "Catania": [("Aer Lingus", "Dublin", 4, 10)],
+    "Catania": [("Ryanair", "Dublin", 4, 10), ("Aer Lingus", "Dublin", 4, 10)],
     # Greece
     "Athens": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12)],
     "Santorini": [("Ryanair", "Dublin", 5, 9), ("Aer Lingus", "Dublin", 5, 9)],
