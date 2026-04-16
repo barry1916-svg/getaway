@@ -301,6 +301,11 @@ def get_booking_url(airline: str, origin: str, destination: str, depart_date: st
     elif airline == "SAS":
         return f"https://www.flysas.com/en/book/flights?from={origin_code}&to={dest_code}&outDate={depart_date}&inDate={return_date}&adt=1"
 
+    elif airline == "Turkish Airlines":
+        dep = depart_date.replace("-", "")
+        ret = return_date.replace("-", "")
+        return f"https://www.turkishairlines.com/en-int/flights/find-flights/index/?tripType=R&origin={origin_code}&destination={dest_code}&outboundDate={dep}&inboundDate={ret}&adult=1&child=0&infant=0&cabin=Y"
+
     else:
         return f"https://www.google.com/travel/flights?q=flights+from+{origin}+to+{destination}"
 
@@ -433,7 +438,7 @@ ROUTES = {
     "Antalya": [("Ryanair", "Dublin", 5, 10), ("Aer Lingus", "Dublin", 5, 10)],
     "Dalaman": [("Ryanair", "Dublin", 5, 10), ("Aer Lingus", "Dublin", 5, 10)],
     "Bodrum": [("Ryanair", "Dublin", 4, 10)],
-    "Istanbul": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12)],
+    "Istanbul": [("Turkish Airlines", "Dublin", 1, 12)],
     # France
     "Nice": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Aer Lingus", "Cork", 5, 9)],
     "Marseille": [("Ryanair", "Dublin", 5, 10)],
