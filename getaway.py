@@ -147,8 +147,6 @@ DESTINATIONS = [
     # Nordics
     {"city": "Stockholm", "country": "Sweden", "lat": 59.3293, "lon": 18.0686},
     {"city": "Copenhagen", "country": "Denmark", "lat": 55.6761, "lon": 12.5683},
-    {"city": "Oslo", "country": "Norway", "lat": 59.9139, "lon": 10.7522},
-    {"city": "Helsinki", "country": "Finland", "lat": 60.1699, "lon": 24.9384},
 
     # Baltics
     {"city": "Riga", "country": "Latvia", "lat": 56.9496, "lon": 24.1052},
@@ -260,7 +258,7 @@ DESTINATION_AIRPORTS = {
     "Amsterdam": "AMS", "Brussels": "BRU", "Geneva": "GVA", "Zurich": "ZRH",
     "Budapest": "BUD", "Prague": "PRG", "Vienna": "VIE", "Bratislava": "BTS",
     "Ljubljana": "LJU", "Krakow": "KRK", "Warsaw": "WAW", "Stockholm": "ARN",
-    "Copenhagen": "CPH", "Oslo": "OSL", "Helsinki": "HEL", "Riga": "RIX",
+    "Copenhagen": "CPH", "Riga": "RIX",
     "Tallinn": "TLL", "Vilnius": "VNO", "Sofia": "SOF", "Bucharest": "OTP",
     # Malta
     "Malta": "MLA",
@@ -478,8 +476,6 @@ ROUTES = {
     # Nordics
     "Stockholm": [("Ryanair", "Dublin", 1, 12)],
     "Copenhagen": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("SAS", "Dublin", 1, 12)],
-    "Oslo": [("Ryanair", "Dublin", 1, 12)],
-    "Helsinki": [("Ryanair", "Dublin", 1, 12)],
     # Baltics
     "Riga": [("Ryanair", "Dublin", 1, 12)],
     "Tallinn": [("Ryanair", "Dublin", 1, 12)],
