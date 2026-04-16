@@ -397,9 +397,9 @@ ROUTES = {
     "Naples": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10), ("Ryanair", "Shannon", 4, 10)],
     "Pisa": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10), ("Ryanair", "Cork", 1, 12)],
     "Bologna": [("Ryanair", "Dublin", 1, 12)],
-    "Turin": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10), ("Ryanair", "Shannon", 1, 12)],
+    "Turin": [("Ryanair", "Dublin", 1, 12)],
     "Bari": [("Ryanair", "Dublin", 4, 10)],
-    "Verona": [("Ryanair", "Dublin", 4, 10), ("Aer Lingus", "Dublin", 4, 10)],
+    "Verona": [("Ryanair", "Dublin", 4, 10)],
     # Sardinia
     "Cagliari": [("Ryanair", "Dublin", 4, 10)],
 
