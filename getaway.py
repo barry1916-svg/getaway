@@ -446,7 +446,7 @@ ROUTES = {
     ],
     "Bordeaux": [("Aer Lingus", "Dublin", 5, 10), ("Ryanair", "Cork", 5, 9), ("Aer Lingus", "Cork", 5, 9)],
     "Toulouse": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10)],
-    "Lyon": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Aer Lingus", "Cork", 1, 12)],
+    "Lyon": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12)],
     "Nantes": [("Ryanair", "Dublin", 1, 12)],
     "Montpellier": [("Ryanair", "Dublin", 5, 9)],
     "Biarritz": [("Ryanair", "Dublin", 5, 9)],
