@@ -300,9 +300,7 @@ def get_booking_url(airline: str, origin: str, destination: str, depart_date: st
         return f"https://www.flysas.com/en/book/flights?from={origin_code}&to={dest_code}&outDate={depart_date}&inDate={return_date}&adt=1"
 
     elif airline == "Turkish Airlines":
-        dep = depart_date.replace("-", "")
-        ret = return_date.replace("-", "")
-        return f"https://www.turkishairlines.com/en-int/flights/find-flights/index/?tripType=R&origin={origin_code}&destination={dest_code}&outboundDate={dep}&inboundDate={ret}&adult=1&child=0&infant=0&cabin=Y"
+        return f"https://www.google.com/travel/flights?q=Turkish+Airlines+{origin}+to+{destination}+{depart_date}"
 
     else:
         return f"https://www.google.com/travel/flights?q=flights+from+{origin}+to+{destination}"
