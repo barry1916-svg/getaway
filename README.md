@@ -34,29 +34,10 @@ Go to [railway.app](https://railway.app) and sign up with your GitHub account.
 ### Step 2 — New project
 Click **New Project** → **Deploy from GitHub repo** → select **barry1916-svg/getaway**.
 
-### Step 3 — Environment variables (optional)
-The web dashboard works without any environment variables. They are only needed if you also want email alerts.
-
-In your Railway project, click the service → **Variables** → **New Variable**:
-
-| Name | Value |
-|------|-------|
-| `GMAIL_ADDRESS` | your Gmail address |
-| `GMAIL_APP_PASSWORD` | your Gmail App Password |
-| `RECIPIENT_EMAIL` | where to send alerts |
-
-### Step 4 — Done
-Railway detects the `Procfile` automatically and starts the app. Once the deployment turns green, click the generated URL to open your dashboard.
+### Step 3 — Done
+The web dashboard works without any environment variables. Railway detects the `Procfile` automatically and starts the app. Once the deployment turns green, click the generated URL to open your dashboard.
 
 Every time you push to GitHub, Railway automatically redeploys.
-
----
-
-## Email alerts (GitHub Actions)
-
-The project also sends a daily weather email at 07:00 and 19:00 UTC. This runs via GitHub Actions — no server required.
-
-To enable it, add the three secrets above to your GitHub repo under **Settings → Secrets and variables → Actions**.
 
 ---
 
@@ -74,5 +55,4 @@ To enable it, add the three secrets above to your GitHub repo under **Settings �
 - **Python 3.12** + Flask
 - **Open-Meteo API** — free weather forecasts, no key needed
 - **Gunicorn** — WSGI server for production
-- **GitHub Actions** — scheduled email alerts
 - **Railway** — recommended hosting
