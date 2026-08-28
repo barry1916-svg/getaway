@@ -223,7 +223,8 @@ DESTINATION_AIRPORTS = {
     # Portugal
     "Lisbon": "LIS", "Porto": "OPO", "Faro": "FAO", "Funchal": "FNC", "Ponta Delgada": "PDL",
     # Italy
-    "Rome": "CIA",  # Ryanair uses Ciampino; Aer Lingus uses FCO but its booking link doesn't use IATA "Milan": "MXP", "Venice": "VCE", "Naples": "NAP",
+    "Rome": "CIA",  # Ryanair uses Ciampino; Aer Lingus uses FCO but its booking link doesn't use IATA
+    "Milan": "MXP", "Venice": "VCE", "Naples": "NAP",
     "Pisa": "PSA", "Bologna": "BLQ", "Turin": "TRN", "Bari": "BRI", "Verona": "VRN",
     "Cagliari": "CAG", "Alghero": "AHO", "Palermo": "PMO", "Catania": "CTA",
     # Greece
@@ -419,7 +420,7 @@ ROUTES = {
     "Tivat": [("Ryanair", "Dublin", 5, 9)],
     # Cyprus
     "Paphos": [("Ryanair", "Dublin", 1, 12)],
-    "Larnaca": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10)],
+    "Larnaca": [("Ryanair", "Dublin", 1, 12)],
     # Turkey
     "Antalya": [("Ryanair", "Dublin", 5, 10), ("Aer Lingus", "Dublin", 5, 10)],
     "Dalaman": [("Ryanair", "Dublin", 5, 10), ("Aer Lingus", "Dublin", 5, 10)],

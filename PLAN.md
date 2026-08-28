@@ -2,7 +2,7 @@
 
 ## Overview
 
-A Python app that sends daily email alerts about sunny European destinations with direct flights from Ireland. It checks weather forecasts, finds the best travel windows, and provides booking links for flights and accommodation.
+A web dashboard showing sunny European destinations with direct flights from Ireland. It checks weather forecasts, finds the best travel windows, and provides booking links for flights and accommodation.
 
 ---
 
@@ -12,7 +12,7 @@ A Python app that sends daily email alerts about sunny European destinations wit
 2. **Finds the best 7-day window** within those 10 days for each destination
 3. **Filters destinations** that meet the weather criteria
 4. **Checks flight availability** based on seasonal routes
-5. **Sends HTML email** with ranked results and booking links
+5. **Renders the dashboard** with ranked results and booking links
 
 ---
 
@@ -71,7 +71,7 @@ Routes are filtered by **seasonal availability** (e.g., Greek islands May-Septem
 
 ---
 
-## Email Features
+## Destination Card Features
 
 Each destination card includes:
 
@@ -96,13 +96,6 @@ Each destination card includes:
 
 ## Configuration
 
-### Environment Variables (.env)
-```
-GMAIL_ADDRESS=your@gmail.com
-GMAIL_APP_PASSWORD=your-16-char-app-password
-RECIPIENT_EMAIL=recipient@email.com
-```
-
 ### Key Constants (in getaway.py)
 ```python
 FORECAST_START_OFFSET = 3   # Days ahead to start forecast
@@ -116,14 +109,8 @@ GOOD_WEATHER_CODES = {0, 1} # Clear sky, Mainly clear
 
 ## Running the App
 
-### Ad-hoc
 ```bash
-python3 /Users/barry/flight-alert/getaway.py
-```
-
-### Daily (cron job at 7 AM)
-```
-0 7 * * * cd /Users/barry/flight-alert && /usr/bin/python3 getaway.py >> /tmp/getaway.log 2>&1
+python app.py
 ```
 
 ---
