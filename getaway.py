@@ -7,6 +7,7 @@ import requests
 from datetime import datetime, timedelta
 from collections import defaultdict
 from typing import Optional, List, Dict
+from urllib.parse import quote
 
 # European destinations with direct flights from Ireland (Dublin, Cork, Shannon)
 DESTINATIONS = [
@@ -273,7 +274,16 @@ def get_booking_url(airline: str, origin: str, destination: str, depart_date: st
         )
 
     elif airline == "Iberia":
-        return f"https://www.iberia.com/gb/?FLIGHT_ORIGIN={origin_code}&FLIGHT_DESTINATION={dest_code}&FLIGHT_DATE_1={depart_date}&FLIGHT_DATE_2={return_date}&adults=1"
+        depart_dt = datetime.strptime(depart_date, "%Y-%m-%d")
+        return_dt = datetime.strptime(return_date, "%Y-%m-%d")
+        return (
+            f"https://www.iberia.com/flights/?market=GB&language=en&flexible=true&TRIP_TYPE=2"
+            f"&BEGIN_CITY_01={origin_code}&END_CITY_01={dest_code}"
+            f"&nombreOrigen={quote(origin)}&nombreDestino={quote(destination)}"
+            f"&BEGIN_DAY_01={depart_dt.day}&BEGIN_MONTH_01={depart_dt.strftime('%Y%m')}&BEGIN_YEAR_01={depart_dt.year}"
+            f"&END_DAY_01={return_dt.day}&END_MONTH_01={return_dt.strftime('%Y%m')}&END_YEAR_01={return_dt.year}"
+            f"&ADT=1&CHD=0&INF=0&BNN=0&YTH=0&YCD=0&bookingMarket=GB#!/availability"
+        )
 
     elif airline == "TAP":
         return "https://www.flytap.com"
