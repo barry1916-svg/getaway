@@ -422,8 +422,8 @@ ROUTES = {
     "Paphos": [("Ryanair", "Dublin", 1, 12)],
     "Larnaca": [("Ryanair", "Dublin", 1, 12)],
     # Turkey
-    "Antalya": [("Ryanair", "Dublin", 5, 10), ("Aer Lingus", "Dublin", 5, 10)],
-    "Dalaman": [("Ryanair", "Dublin", 5, 10), ("Aer Lingus", "Dublin", 5, 10)],
+    "Antalya": [("Ryanair", "Dublin", 5, 10)],  # Aer Lingus route not currently bookable (Aug 2026)
+    "Dalaman": [("Ryanair", "Dublin", 5, 10)],  # Aer Lingus route not currently bookable (Aug 2026)
     "Bodrum": [("Ryanair", "Dublin", 4, 10)],
     "Istanbul": [("Turkish Airlines", "Dublin", 1, 12)],
     # France
