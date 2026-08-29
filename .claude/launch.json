@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "getaway",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["app.py"],
+      "env": { "PORT": "5050" },
+      "port": 5050
+    }
+  ]
+}

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ country }} ☀️ — Getaway</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☀️</text></svg>">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+    <a class="back-link" href="/">← All countries</a>
+    <h1>{{ country }}</h1>
+    <p class="subtitle">Direct flights from Ireland &nbsp;·&nbsp; Best weather right now</p>
+    <div class="header-meta">
+        <div id="last-updated">Checking weather…</div>
+        <button id="refresh-btn" onclick="manualRefresh()" title="Refresh now">↻ Refresh</button>
+    </div>
+</header>
+
+<main>
+    <div id="loading">
+        <div class="spinner"></div>
+        <p>Checking the weather in {{ country }}…<small>This may take a minute on first load</small></p>
+    </div>
+
+    <div id="error">
+        <div class="emoji">😕</div>
+        <h2>Couldn't load weather data</h2>
+        <p>Please try again later.</p>
+    </div>
+
+    <div id="empty">
+        <div class="emoji">🌥️</div>
+        <h2>No destinations meet the criteria right now</h2>
+        <p>Check back later or pick another country.</p>
+    </div>
+
+    <div id="stats-bar">
+        <span id="result-count"></span>
+    </div>
+
+    <div id="grid"></div>
+</main>
+
+<script src="{{ url_for('static', filename='common.js') }}"></script>
+<script>
+    const COUNTRY = {{ country|tojson }};
+
+    async function loadWeather(force = false) {
+        const base = `/api/destinations/${encodeURIComponent(COUNTRY)}`;
+        const url = force ? `${base}?refresh=1` : base;
+        try {
+            const res = await fetch(url);
+            if (!res.ok) throw new Error("API error " + res.status);
+            const data = await res.json();
+
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("last-updated").textContent = "Updated " + data.updated_at;
+
+            // Reset state
+            document.getElementById("error").style.display = "none";
+            document.getElementById("empty").style.display = "none";
+            document.getElementById("stats-bar").style.display = "none";
+            document.getElementById("grid").style.display = "none";
+            document.getElementById("grid").innerHTML = "";
+
+            if (data.count === 0) {
+                document.getElementById("empty").style.display = "block";
+            } else {
+                document.getElementById("stats-bar").style.display = "flex";
+                document.getElementById("result-count").textContent =
+                    `Top ${data.count} destination${data.count !== 1 ? "s" : ""} in ${data.country}`;
+
+                const grid = document.getElementById("grid");
+                grid.style.display = "grid";
+                grid.innerHTML = data.destinations.map(renderCard).join("");
+            }
+
+            // Schedule silent auto-refresh in 1 hour
+            setTimeout(() => loadWeather(false), 60 * 60 * 1000);
+
+        } catch (e) {
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("error").style.display = "block";
+            document.getElementById("last-updated").textContent = "Failed to load";
+        }
+    }
+
+    async function manualRefresh() {
+        const btn = document.getElementById("refresh-btn");
+        btn.disabled = true;
+        document.getElementById("last-updated").textContent = "Refreshing…";
+        await loadWeather(true);
+        btn.disabled = false;
+    }
+
+    loadWeather();
+</script>
+</body>
+</html>
