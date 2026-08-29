@@ -50,6 +50,20 @@ Every time you push to GitHub, Railway automatically redeploys.
 
 ---
 
+## Route link auditing
+
+`scripts/audit_links.py` checks every (airline, destination) pair in `getaway.py`'s `ROUTES` table for a genuinely bookable flight, using a headless browser (these airline sites are JS-rendered SPAs, so a plain HTTP fetch can't see a client-side error). It runs daily via a scheduled cloud agent.
+
+Because these sites' anti-bot protection can punish automated traffic (a route confirmed working by hand can still come back as a false positive under repeated automated checks), the script never treats a single BROKEN result as final — it only flags a route as `confirmed_broken`, safe to act on, after seeing it BROKEN on two runs in a row (state tracked in `scripts/audit_state.json`, which is committed so the count survives across runs). SAS is skipped (Cloudflare bot-check), and Air France/KLM/Swiss are checked but only ever reported as low-confidence — no established failure signature yet, so they're never auto-fixed.
+
+Run it manually with:
+```bash
+pip install playwright && playwright install --with-deps chromium
+python3 scripts/audit_links.py
+```
+
+---
+
 ## Tech stack
 
 - **Python 3.12** + Flask
