@@ -1,10 +1,13 @@
 function renderCountryCard(c) {
     const flag = FLAGS[c.country] || "🌍";
+    const bestLine = c.count > 0
+        ? `Best: ${c.best_city}, ${c.best_temp}° · ${c.best_good_days} sunny day${c.best_good_days !== 1 ? "s" : ""}`
+        : "No destinations meet the criteria right now";
     return `<a class="country-card" href="/country/${encodeURIComponent(c.country)}">
         <div class="country-flag">${flag}</div>
         <div class="country-name">${c.country}</div>
         <div class="country-meta">${c.count} destination${c.count !== 1 ? "s" : ""}</div>
-        <div class="country-best">Best: ${c.best_city}, ${c.best_temp}° · ${c.best_good_days} sunny day${c.best_good_days !== 1 ? "s" : ""}</div>
+        <div class="country-best">${bestLine}</div>
     </a>`;
 }
 

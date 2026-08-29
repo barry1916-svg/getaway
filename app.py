@@ -140,8 +140,17 @@ def countries():
     # Rank countries by their best destination's weather
     summaries.sort(key=lambda c: (c["best_good_days"], c["best_temp"]), reverse=True)
 
+    # Spain is always shown, even if it didn't naturally rank in the top 6
+    top = summaries[:TOP_COUNTRIES]
+    if not any(c["country"] == "Spain" for c in top):
+        spain = next((c for c in summaries if c["country"] == "Spain"), {
+            "country": "Spain", "count": 0,
+            "best_city": None, "best_temp": None, "best_good_days": 0,
+        })
+        top = top[:TOP_COUNTRIES - 1] + [spain]
+
     data = {
-        "countries": summaries[:TOP_COUNTRIES],
+        "countries": top,
         "updated_at": datetime.utcnow().strftime("%d %b %Y, %H:%M UTC"),
     }
 
