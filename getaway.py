@@ -430,7 +430,7 @@ ROUTES = {
     "Tivat": [],  # Ryanair route not currently bookable (Aug 2026)
     # Cyprus
     "Paphos": [("Ryanair", "Dublin", 1, 12)],
-    "Larnaca": [("Ryanair", "Dublin", 1, 12)],
+    "Larnaca": [],  # Ryanair route not currently bookable (Aug 2026)
     # Turkey
     "Antalya": [("Ryanair", "Dublin", 5, 10)],  # Aer Lingus route not currently bookable (Aug 2026)
     "Dalaman": [("Ryanair", "Dublin", 5, 10)],  # Aer Lingus route not currently bookable (Aug 2026)
