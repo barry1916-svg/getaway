@@ -426,8 +426,8 @@ ROUTES = {
     "Zadar": [("Ryanair", "Dublin", 5, 9), ("Ryanair", "Cork", 5, 9)],
     "Pula": [("Ryanair", "Dublin", 5, 9)],
     # Montenegro
-    "Podgorica": [("Ryanair", "Dublin", 5, 9)],
-    "Tivat": [("Ryanair", "Dublin", 5, 9)],
+    "Podgorica": [],  # Ryanair route not currently bookable (Aug 2026)
+    "Tivat": [],  # Ryanair route not currently bookable (Aug 2026)
     # Cyprus
     "Paphos": [("Ryanair", "Dublin", 1, 12)],
     "Larnaca": [("Ryanair", "Dublin", 1, 12)],
