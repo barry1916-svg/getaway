@@ -33,10 +33,27 @@ from ever auto-deleting a real route on a bad-luck day, this script does
 NOT report anything as safe-to-fix on the first BROKEN sighting. It keeps
 a small persisted state file (audit_state.json, alongside this script)
 and only escalates a pair into the "confirmed_broken" list once it has
-been seen BROKEN on two separate runs in a row. A single OK result clears
-its count immediately. A caller (e.g. the daily scheduled agent) should
-only ever edit getaway.py for pairs in confirmed_broken, never for ones
-only in this run's raw "results" list.
+been seen BROKEN on several separate runs in a row (see
+CONFIRM_AFTER_N_BROKEN below). A single OK result clears its count
+immediately. A caller (e.g. the daily scheduled agent) should only ever
+edit getaway.py for pairs in confirmed_broken, never for ones only in
+this run's raw "results" list.
+
+ANOTHER IMPORTANT LESSON (2026-08-30): a "BROKEN" Ryanair result does not
+always mean the route is dead -- it can mean our hardcoded airport code
+in DESTINATION_AIRPORTS is stale. Ryanair silently switched Rome from
+Ciampino (CIA) to Fiumicino (FCO), and uses Paris Beauvais (BVA) and
+Warsaw Modlin (WMI) instead of the mainstream-carrier airports (CDG,
+WAW) hardcoded for those cities -- all three looked identical to a truly
+dead route (page loads, but no fare ever renders) until checked against
+Ryanair's own destination search widget, which still offered a
+suggestion (just a different airport) for these three, versus zero
+suggestions at all for genuinely dead routes. Per-airline overrides for
+known cases live in getaway.py's AIRLINE_AIRPORT_OVERRIDES. Before
+trusting a new confirmed_broken Ryanair entry, it's worth a quick check
+of https://www.ryanair.com 's own destination search for that city: if it
+suggests an airport at all, the fix is very likely a missing entry in
+AIRLINE_AIRPORT_OVERRIDES, not a route removal.
 
 Usage:
     pip install playwright && playwright install --with-deps chromium
@@ -83,7 +100,15 @@ STEALTH_UA = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
 )
-CONFIRM_AFTER_N_BROKEN = 2
+# A full manual sweep of all Ryanair destinations (2026-08-30) found this
+# checker has a real ~16% scattered false-positive rate (14/86 destinations
+# flagged BROKEN on a single pass, including Zakynthos which cleared on an
+# immediate retest) -- most likely transient slow responses from Ryanair's
+# backend, not bot detection. At a 2-run confirmation threshold, that rate
+# implies roughly 1 in 40 genuinely-fine routes could still get falsely
+# confirmed and auto-removed over any given 2-day window across the full
+# route table. Requiring 3 consecutive runs cuts that to roughly 1 in 250.
+CONFIRM_AFTER_N_BROKEN = 3
 
 
 def load_state():
@@ -184,6 +209,22 @@ CHECKERS = {
     "Iberia": check_iberia,
 }
 
+# The scheduled cloud sandbox ships a pre-installed Chromium at this path,
+# but pip's `playwright` package often expects a newer browser revision than
+# what's pre-installed, and `playwright install chromium` fails there (the
+# outbound proxy blocks cdn.playwright.dev). Launching against the
+# pre-installed binary directly sidesteps needing any browser download at
+# all. Falls back to Playwright's normal resolution (e.g. for local dev,
+# where this path won't exist and a matching browser is installed normally).
+SANDBOX_CHROMIUM_PATH = "/opt/pw-browsers/chromium"
+
+
+def launch_browser(p):
+    launch_args = {"headless": True, "args": ["--disable-blink-features=AutomationControlled"]}
+    if os.path.exists(SANDBOX_CHROMIUM_PATH):
+        launch_args["executable_path"] = SANDBOX_CHROMIUM_PATH
+    return p.chromium.launch(**launch_args)
+
 
 def main():
     checks = collect_checks()
@@ -191,7 +232,7 @@ def main():
     state = load_state()
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True, args=["--disable-blink-features=AutomationControlled"])
+        browser = launch_browser(p)
 
         for (airline, city), (origin, start_m, end_m) in sorted(checks.items()):
             if airline in SKIP_AIRLINES:

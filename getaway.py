@@ -224,7 +224,7 @@ DESTINATION_AIRPORTS = {
     # Portugal
     "Lisbon": "LIS", "Porto": "OPO", "Faro": "FAO", "Funchal": "FNC", "Ponta Delgada": "PDL",
     # Italy
-    "Rome": "CIA",  # Ryanair uses Ciampino; Aer Lingus uses FCO but its booking link doesn't use IATA
+    "Rome": "FCO",  # both Ryanair and Aer Lingus now fly into Fiumicino, not Ciampino
     "Milan": "MXP", "Venice": "VCE", "Naples": "NAP",
     "Pisa": "PSA", "Bologna": "BLQ", "Turin": "TRN", "Bari": "BRI", "Verona": "VRN",
     "Cagliari": "CAG", "Alghero": "AHO", "Palermo": "PMO", "Catania": "CTA",
@@ -256,11 +256,20 @@ DESTINATION_AIRPORTS = {
     "Malta": "MLA",
 }
 
+# Some airlines fly a city via a different (often secondary/budget) airport
+# than the shared code above -- checked first, before falling back to it.
+# Discovered by checking Ryanair's own destination search, which suggested
+# a different airport than our data for these cities (Aug 2026).
+AIRLINE_AIRPORT_OVERRIDES = {
+    ("Ryanair", "Paris"): "BVA",    # Beauvais, not Charles de Gaulle
+    ("Ryanair", "Warsaw"): "WMI",   # Modlin, not Chopin
+}
+
 
 def get_booking_url(airline: str, origin: str, destination: str, depart_date: str, return_date: str) -> str:
     """Generate a pre-populated booking URL for the airline."""
     origin_code = IRISH_AIRPORTS.get(origin, "DUB")
-    dest_code = DESTINATION_AIRPORTS.get(destination, "")
+    dest_code = AIRLINE_AIRPORT_OVERRIDES.get((airline, destination)) or DESTINATION_AIRPORTS.get(destination, "")
 
     if airline == "Ryanair":
         return f"https://www.ryanair.com/gb/en/trip/flights/select?adults=1&teens=0&children=0&infants=0&dateOut={depart_date}&dateIn={return_date}&isReturn=true&discount=0&promoCode=&isConnectedFlight=false&originIata={origin_code}&destinationIata={dest_code}"
@@ -365,7 +374,7 @@ ROUTES = {
     "Santander": [("Ryanair", "Dublin", 1, 12)],
     "Asturias": [],  # Ryanair ended all flights to Asturias
     "Zaragoza": [],  # No direct Dublin service
-    "Granada": [("Ryanair", "Dublin", 5, 9)],
+    "Granada": [],  # Ryanair route not currently bookable (Aug 2026)
     "A Coruna": [],  # No direct Dublin service
     "Vigo": [],  # Ryanair suspended all Vigo flights Jan 2026
     # Portugal
@@ -403,7 +412,7 @@ ROUTES = {
     "Alghero": [("Ryanair", "Dublin", 5, 9), ("Ryanair", "Cork", 5, 9)],
     # Sicily
     "Palermo": [("Ryanair", "Dublin", 1, 12)],
-    "Catania": [("Ryanair", "Dublin", 4, 10), ("Aer Lingus", "Dublin", 4, 10)],
+    "Catania": [("Aer Lingus", "Dublin", 4, 10)],  # Ryanair route not currently bookable (Aug 2026)
     # Greece
     "Athens": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12)],
     "Santorini": [("Ryanair", "Dublin", 5, 9), ("Aer Lingus", "Dublin", 5, 9)],
@@ -413,18 +422,18 @@ ROUTES = {
     "Rhodes": [("Ryanair", "Dublin", 5, 9), ("Ryanair", "Cork", 5, 10)],  # Aer Lingus route not currently bookable (Aug 2026)
     "Corfu": [("Ryanair", "Dublin", 4, 10), ("Aer Lingus", "Dublin", 5, 9), ("Ryanair", "Shannon", 6, 10)],
     "Zakynthos": [("Ryanair", "Dublin", 5, 9)],
-    "Kefalonia": [("Ryanair", "Dublin", 5, 9)],
-    "Mykonos": [("Ryanair", "Dublin", 5, 9)],
-    "Preveza": [("Ryanair", "Dublin", 5, 9)],
+    "Kefalonia": [],  # Ryanair route not currently bookable (Aug 2026)
+    "Mykonos": [],  # Ryanair route not currently bookable (Aug 2026)
+    "Preveza": [],  # Ryanair route not currently bookable (Aug 2026)
     "Skiathos": [("Ryanair", "Dublin", 5, 9)],
-    "Kalamata": [("Ryanair", "Dublin", 5, 9)],
+    "Kalamata": [],  # Ryanair route not currently bookable (Aug 2026)
     "Thessaloniki": [("Ryanair", "Dublin", 3, 10)],
     # Croatia
     "Split": [("Ryanair", "Dublin", 4, 10), ("Aer Lingus", "Dublin", 5, 9)],
     "Dubrovnik": [("Ryanair", "Dublin", 4, 10), ("Aer Lingus", "Dublin", 5, 9)],
     "Zagreb": [("Ryanair", "Dublin", 1, 12)],
     "Zadar": [("Ryanair", "Dublin", 5, 9), ("Ryanair", "Cork", 5, 9)],
-    "Pula": [("Ryanair", "Dublin", 5, 9)],
+    "Pula": [],  # Ryanair route not currently bookable (Aug 2026)
     # Montenegro
     "Podgorica": [],  # Ryanair route not currently bookable (Aug 2026)
     "Tivat": [],  # Ryanair route not currently bookable (Aug 2026)
@@ -432,7 +441,7 @@ ROUTES = {
     "Paphos": [("Ryanair", "Dublin", 1, 12)],
     "Larnaca": [],  # Ryanair route not currently bookable (Aug 2026)
     # Turkey
-    "Antalya": [("Ryanair", "Dublin", 5, 10)],  # Aer Lingus route not currently bookable (Aug 2026)
+    "Antalya": [],  # Neither Ryanair nor Aer Lingus route currently bookable (Aug 2026)
     "Dalaman": [("Ryanair", "Dublin", 5, 10)],  # Aer Lingus route not currently bookable (Aug 2026)
     "Bodrum": [("Ryanair", "Dublin", 4, 10)],
     "Istanbul": [("Turkish Airlines", "Dublin", 1, 12)],
@@ -451,9 +460,9 @@ ROUTES = {
     "Biarritz": [("Ryanair", "Dublin", 5, 9)],
     "Carcassonne": [("Ryanair", "Dublin", 5, 10), ("Ryanair", "Cork", 5, 10)],
     "Beziers": [],  # Ryanair dropped BZR routes S26
-    "Bergerac": [("Ryanair", "Dublin", 5, 9)],
+    "Bergerac": [],  # Ryanair route not currently bookable (Aug 2026)
     "La Rochelle": [("Ryanair", "Dublin", 5, 9), ("Ryanair", "Cork", 5, 9)],
-    "Perpignan": [("Ryanair", "Dublin", 5, 9)],
+    "Perpignan": [],  # Ryanair route not currently bookable (Aug 2026)
     "Grenoble": [("Ryanair", "Dublin", 12, 3)],
     # Other Western Europe
     "Amsterdam": [
