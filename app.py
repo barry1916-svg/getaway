@@ -27,6 +27,11 @@ CACHE_TTL = 3600  # 1 hour
 TOP_COUNTRIES = 6
 TOP_DESTINATIONS_PER_COUNTRY = 12
 
+# Cities always shown on their country's page, regardless of weather ranking
+PINNED_DESTINATIONS = {
+    "Spain": ["Santiago de Compostela", "Bilbao"],
+}
+
 
 def _booking_links(result):
     """Generate Skyscanner, Airbnb and Booking.com search URLs."""
@@ -166,18 +171,22 @@ def destinations_by_country(country):
 
     matches = [r for r in candidates if r["country"] == country]
 
-    # Always include Santiago de Compostela in Spain's results; fetch directly if it didn't make candidates
-    if country == "Spain":
-        pinned = [r for r in matches if r["city"] == "Santiago de Compostela"]
-        if not pinned:
-            santiago_dest = next(
-                (d for d in getaway.DESTINATIONS if d["city"] == "Santiago de Compostela"), None
-            )
-            if santiago_dest:
-                result = getaway.check_destination_unconstrained(santiago_dest)
+    # Always include certain cities regardless of weather ranking; fetch directly if they didn't make candidates
+    pinned_cities = PINNED_DESTINATIONS.get(country, [])
+    if pinned_cities:
+        pinned = []
+        for city in pinned_cities:
+            existing = next((r for r in matches if r["city"] == city), None)
+            if existing:
+                pinned.append(existing)
+                continue
+            dest = next((d for d in getaway.DESTINATIONS if d["city"] == city), None)
+            if dest:
+                result = getaway.check_destination_unconstrained(dest)
                 if result:
-                    pinned = [result]
-        others = [r for r in matches if r["city"] != "Santiago de Compostela"]
+                    pinned.append(result)
+        pinned_names = {r["city"] for r in pinned}
+        others = [r for r in matches if r["city"] not in pinned_names]
         matches = others[:TOP_DESTINATIONS_PER_COUNTRY - len(pinned)] + pinned
     else:
         matches = matches[:TOP_DESTINATIONS_PER_COUNTRY]
