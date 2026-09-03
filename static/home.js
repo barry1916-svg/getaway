@@ -11,14 +11,14 @@ function renderCountryCard(c) {
     </a>`;
 }
 
-function renderShannonKnockCard(sk) {
-    const bestLine = sk.count > 0
-        ? `Best: ${sk.best_city}, ${sk.best_temp}° · ${sk.best_good_days} sunny day${sk.best_good_days !== 1 ? "s" : ""}`
+function renderOriginPanelCard(p) {
+    const bestLine = p.count > 0
+        ? `Best: ${p.best_city}, ${p.best_temp}° · ${p.best_good_days} sunny day${p.best_good_days !== 1 ? "s" : ""}`
         : "No destinations meet the criteria right now";
-    return `<a class="country-card" href="/shannon-knock">
-        <div class="country-flag">🍀</div>
-        <div class="country-name">Shannon &amp; Knock</div>
-        <div class="country-meta">${sk.count} destination${sk.count !== 1 ? "s" : ""}</div>
+    return `<a class="country-card" href="/origin/${encodeURIComponent(p.key)}">
+        <div class="country-flag">${p.icon}</div>
+        <div class="country-name">${p.label}</div>
+        <div class="country-meta">${p.count} destination${p.count !== 1 ? "s" : ""}</div>
         <div class="country-best">${bestLine}</div>
     </a>`;
 }
@@ -36,7 +36,7 @@ async function loadCountries(force = false) {
 
         const grid = document.getElementById("country-grid");
         grid.style.display = "grid";
-        grid.innerHTML = data.countries.map(renderCountryCard).join("") + renderShannonKnockCard(data.shannon_knock);
+        grid.innerHTML = data.countries.map(renderCountryCard).join("") + data.origin_panels.map(renderOriginPanelCard).join("");
 
         // Schedule silent auto-refresh in 1 hour
         setTimeout(() => loadCountries(false), 60 * 60 * 1000);

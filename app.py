@@ -33,8 +33,12 @@ PINNED_DESTINATIONS = {
     "Spain": ["Santiago de Compostela", "Bilbao"],
 }
 
-# Origin airports covered by the dedicated "Shannon & Knock" home page panel
-SHANNON_KNOCK_ORIGINS = {"Shannon", "Knock"}
+# Origin-airport panels shown on the home page alongside the country panels,
+# each covering destinations with a nonstop flight from any of its airports
+ORIGIN_PANELS = {
+    "shannon-knock": {"label": "Shannon & Knock", "icon": "🍀", "origins": {"Shannon", "Knock"}},
+    "cork": {"label": "Cork", "icon": "🇮🇪", "origins": {"Cork"}},
+}
 
 
 def _booking_links(result):
@@ -136,10 +140,13 @@ def country_page(country):
     return render_template("country.html", heading=country, api_path=f"/api/destinations/{quote(country)}")
 
 
-@app.route("/shannon-knock")
-def shannon_knock_page():
+@app.route("/origin/<key>")
+def origin_page(key):
+    panel = ORIGIN_PANELS.get(key)
+    if not panel:
+        return "Not found", 404
     return render_template(
-        "country.html", heading="Shannon & Knock", api_path="/api/destinations/shannon-knock"
+        "country.html", heading=panel["label"], api_path=f"/api/destinations/origin/{key}"
     )
 
 
@@ -175,21 +182,23 @@ def countries():
         })
         top = top[:TOP_COUNTRIES - 1] + [spain]
 
-    sk_matches = [r for r in candidates if _routes_from(r, SHANNON_KNOCK_ORIGINS)]
-    if sk_matches:
-        best = sk_matches[0]
-        shannon_knock = {
-            "count": len(sk_matches),
-            "best_city": best["city"],
-            "best_temp": round(best["best_temp"], 1),
-            "best_good_days": len(best["good_days"]),
-        }
-    else:
-        shannon_knock = {"count": 0, "best_city": None, "best_temp": None, "best_good_days": 0}
+    origin_panels = []
+    for key, panel in ORIGIN_PANELS.items():
+        matches = [r for r in candidates if _routes_from(r, panel["origins"])]
+        best = matches[0] if matches else None
+        origin_panels.append({
+            "key": key,
+            "label": panel["label"],
+            "icon": panel["icon"],
+            "count": len(matches),
+            "best_city": best["city"] if best else None,
+            "best_temp": round(best["best_temp"], 1) if best else None,
+            "best_good_days": len(best["good_days"]) if best else 0,
+        })
 
     data = {
         "countries": top,
-        "shannon_knock": shannon_knock,
+        "origin_panels": origin_panels,
         "updated_at": datetime.utcnow().strftime("%d %b %Y, %H:%M UTC"),
     }
 
@@ -239,22 +248,26 @@ def destinations_by_country(country):
     return resp
 
 
-@app.route("/api/destinations/shannon-knock")
-def destinations_shannon_knock():
+@app.route("/api/destinations/origin/<key>")
+def destinations_by_origin(key):
+    panel = ORIGIN_PANELS.get(key)
+    if not panel:
+        return jsonify({"error": "Unknown origin panel"}), 404
+
     force = request.args.get("refresh") == "1"
     candidates = _get_candidates(force)
 
     matches = []
     for r in candidates:
-        sk_routes = _routes_from(r, SHANNON_KNOCK_ORIGINS)
-        if sk_routes:
-            matches.append(_with_routes(r, sk_routes))
+        origin_routes = _routes_from(r, panel["origins"])
+        if origin_routes:
+            matches.append(_with_routes(r, origin_routes))
     matches = matches[:TOP_DESTINATIONS_PER_COUNTRY]
 
     destinations = [_serialise_destination(r) for r in matches]
 
     data = {
-        "label": "Shannon & Knock",
+        "label": panel["label"],
         "destinations": destinations,
         "updated_at": datetime.utcnow().strftime("%d %b %Y, %H:%M UTC"),
         "count": len(destinations),

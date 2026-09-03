@@ -331,7 +331,7 @@ ROUTES = {
     "Malaga": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
         ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 1, 12), ("Ryanair", "Knock", 5, 9),
-        ("Aer Lingus", "Cork", 4, 10), ("Aer Lingus", "Shannon", 4, 10)
+        ("Aer Lingus", "Cork", 4, 10),  # Aer Lingus Shannon route not currently bookable (Sept 2026)
     ],
     "Seville": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Ryanair", "Cork", 4, 10)],
     "Valencia": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Cork", 4, 10)],
