@@ -268,20 +268,17 @@ def destinations_shannon_knock():
 @app.route("/api/debug/weather-test")
 def debug_weather_test():
     """Temporary diagnostic: surface the real exception from an Open-Meteo call in this environment."""
-    import requests
     import traceback
     try:
-        resp = requests.get(
-            "https://api.open-meteo.com/v1/forecast",
-            params={
-                "latitude": 41.3851, "longitude": 2.1734,
-                "daily": "temperature_2m_max,weather_code", "timezone": "UTC",
-                "start_date": "2026-09-06", "end_date": "2026-09-15",
-            },
-            timeout=15,
-        )
-        resp.raise_for_status()
-        return jsonify({"ok": True, "status": resp.status_code, "body": resp.json()})
+        barcelona = next(d for d in getaway.DESTINATIONS if d["city"] == "Barcelona")
+        real_result = getaway.check_destination_unconstrained(barcelona)
+        return jsonify({
+            "ok": True,
+            "server_now_utc": datetime.utcnow().isoformat(),
+            "server_now_local": datetime.now().isoformat(),
+            "real_function_result_is_none": real_result is None,
+            "real_function_result": real_result,
+        })
     except Exception as e:
         return jsonify({"ok": False, "error_type": type(e).__name__, "error": str(e), "traceback": traceback.format_exc()})
 
