@@ -270,13 +270,23 @@ def debug_weather_test():
     """Temporary diagnostic: surface the real exception from an Open-Meteo call in this environment."""
     import traceback
     try:
-        sample = [d for d in getaway.DESTINATIONS if d["city"] in ("Barcelona", "Madrid", "Malaga")]
-        forecasts = getaway.get_weather_forecasts_bulk(sample)
+        current_month = datetime.now().month
+        active = [d for d in getaway.DESTINATIONS if getaway.get_available_routes(d["city"], current_month)]
+        t0 = time.time()
+        forecasts = getaway.get_weather_forecasts_bulk(active)
+        elapsed = time.time() - t0
+        candidates = []
+        for dest, forecast in zip(active, forecasts):
+            result = getaway.check_destination_from_forecast(dest, forecast)
+            if result:
+                candidates.append(result)
         return jsonify({
             "ok": True,
-            "sample_cities": [d["city"] for d in sample],
+            "active_count": len(active),
+            "elapsed_seconds": round(elapsed, 2),
             "forecasts_none_count": sum(1 for f in forecasts if f is None),
-            "forecasts": forecasts,
+            "candidates_count": len(candidates),
+            "none_cities": [d["city"] for d, f in zip(active, forecasts) if f is None],
         })
     except Exception as e:
         return jsonify({"ok": False, "error_type": type(e).__name__, "error": str(e), "traceback": traceback.format_exc()})
