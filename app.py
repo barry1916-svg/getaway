@@ -45,8 +45,11 @@ def _booking_links(result):
     """Generate Skyscanner, Airbnb and Booking.com search URLs."""
     city, country = result["city"], result["country"]
     dep, ret = result["depart_date"], result["return_date"]
+    # Use whichever origin airport is actually relevant to this view (routes
+    # are pre-filtered to one origin group on origin-panel pages like Cork)
+    origin = result["routes"][0][1] if result["routes"] else "Dublin"
     return {
-        "skyscanner_url": getaway.get_skyscanner_url("Dublin", city, dep, ret),
+        "skyscanner_url": getaway.get_skyscanner_url(origin, city, dep, ret),
         "airbnb_url": (
             f"https://www.airbnb.com/s/{city}/homes"
             f"?checkin={dep}&checkout={ret}"

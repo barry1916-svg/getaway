@@ -338,7 +338,7 @@ ROUTES = {
     "Alicante": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
         ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 4, 10), ("Ryanair", "Knock", 5, 9),
-        ("Ryanair", "Kerry", 5, 9), ("Aer Lingus", "Cork", 4, 10)
+        ("Ryanair", "Kerry", 5, 9),  # Aer Lingus Cork route not currently bookable (Sept 2026)
     ],
     "Palma Mallorca": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10),
@@ -350,7 +350,7 @@ ROUTES = {
     "Tenerife": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
         ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 1, 12),
-        ("Aer Lingus", "Cork", 1, 12), ("Aer Lingus", "Shannon", 1, 12)
+        ("Aer Lingus", "Cork", 1, 12),  # Aer Lingus Shannon route not currently bookable (Sept 2026)
     ],
     "Gran Canaria": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
@@ -359,12 +359,12 @@ ROUTES = {
     "Lanzarote": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
         ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 1, 12), ("Ryanair", "Knock", 1, 12),
-        ("Aer Lingus", "Cork", 1, 12), ("Aer Lingus", "Shannon", 1, 12)
+        ("Aer Lingus", "Cork", 1, 12),  # Aer Lingus Shannon route not currently bookable (Sept 2026)
     ],
     "Fuerteventura": [
-        ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
+        ("Ryanair", "Dublin", 1, 12),
         ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 4, 10)
-    ],
+    ],  # Aer Lingus Dublin route not currently bookable (Sept 2026)
     "Bilbao": [("Aer Lingus", "Dublin", 4, 10), ("Aer Lingus", "Cork", 4, 10)],
     "Santiago de Compostela": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 5, 10), ("Ryanair", "Shannon", 5, 9), ("Aer Lingus", "Cork", 6, 10)],
     "Girona": [("Ryanair", "Dublin", 4, 10), ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 4, 10), ("Ryanair", "Knock", 5, 9)],
@@ -387,7 +387,7 @@ ROUTES = {
     "Faro": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
         ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 4, 10), ("Ryanair", "Knock", 5, 9),
-        ("Ryanair", "Kerry", 5, 9), ("Aer Lingus", "Cork", 4, 10), ("Aer Lingus", "Shannon", 4, 10)
+        ("Ryanair", "Kerry", 5, 9), ("Aer Lingus", "Cork", 4, 10),  # Aer Lingus Shannon route not currently bookable (Sept 2026)
     ],
     "Funchal": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Shannon", 4, 10)],  # Aer Lingus route not currently bookable (Aug 2026)
     "Ponta Delgada": [],  # Ryanair discontinued all Azores routes March 2026
@@ -417,7 +417,7 @@ ROUTES = {
     # Greece
     "Athens": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12)],
     "Santorini": [("Ryanair", "Dublin", 5, 9), ("Aer Lingus", "Dublin", 5, 9)],
-    "Heraklion": [("Aer Lingus", "Dublin", 5, 10), ("Aer Lingus", "Cork", 6, 9)],
+    "Heraklion": [("Aer Lingus", "Dublin", 5, 10)],  # Aer Lingus Cork route not currently bookable (Sept 2026)
     "Chania": [("Ryanair", "Dublin", 5, 9)],
     "Kos": [("Ryanair", "Dublin", 5, 9)],
     "Rhodes": [("Ryanair", "Dublin", 5, 9), ("Ryanair", "Cork", 5, 10)],  # Aer Lingus route not currently bookable (Aug 2026)
@@ -451,7 +451,8 @@ ROUTES = {
     "Marseille": [("Ryanair", "Dublin", 5, 10)],
     "Paris": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Air France", "Dublin", 1, 12),
-        ("Aer Lingus", "Cork", 1, 12), ("Aer Lingus", "Shannon", 1, 12)
+        ("Aer Lingus", "Shannon", 1, 12)
+        # Aer Lingus Cork: timetable not yet released for this route (Sept 2026)
     ],
     "Bordeaux": [("Aer Lingus", "Dublin", 5, 10), ("Aer Lingus", "Cork", 5, 9)],  # Ryanair Cork route not currently bookable (Aug 2026)
     "Toulouse": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 4, 10)],
@@ -468,7 +469,8 @@ ROUTES = {
     # Other Western Europe
     "Amsterdam": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("KLM", "Dublin", 1, 12),
-        ("Aer Lingus", "Cork", 1, 12), ("Aer Lingus", "Shannon", 1, 12), ("KLM", "Cork", 1, 12)
+        ("KLM", "Cork", 1, 12)
+        # Aer Lingus Cork and Shannon routes not currently bookable (Sept 2026)
     ],
     "Brussels": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Ryanair", "Cork", 4, 10)],
     "Geneva": [("Aer Lingus", "Dublin", 1, 12)],
@@ -481,7 +483,8 @@ ROUTES = {
     "Ljubljana": [],  # No direct Dublin service (Ryanair negotiations ongoing but no deal)
     # Poland
     "Krakow": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 1, 12)],
-    "Warsaw": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 1, 12)],
+    "Warsaw": [("Ryanair", "Dublin", 1, 12), ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 1, 12)],
+    # Aer Lingus Dublin: confirmed seasonal, not currently operating (Sept 2026); re-check to restore once its season is known
     # Nordics
     "Stockholm": [("Ryanair", "Dublin", 1, 12)],
     "Copenhagen": [("Ryanair", "Dublin", 1, 12), ("SAS", "Dublin", 1, 12)],  # Aer Lingus route not currently bookable (Aug 2026)
