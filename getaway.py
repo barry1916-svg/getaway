@@ -4,6 +4,7 @@ Weather Alert App - Check sunny destinations with direct flights from Ireland
 """
 
 import requests
+import time
 from datetime import datetime, timedelta
 from collections import defaultdict
 from typing import Optional, List, Dict
@@ -575,20 +576,29 @@ def get_weather_forecasts_bulk(destinations: list, batch_size: int = 30) -> list
             "start_date": start_date.strftime("%Y-%m-%d"),
             "end_date": end_date.strftime("%Y-%m-%d"),
         }
-        try:
-            resp = requests.get(url, params=params, timeout=15)
-            resp.raise_for_status()
-            data = resp.json()
-            if isinstance(data, list):
-                all_forecasts.extend(data)
-            elif isinstance(data, dict) and "daily" in data:
-                # Single-location response (batch of 1)
-                all_forecasts.append(data)
-            else:
+        # Retry on transient failures (e.g. brief rate-limiting/network blips)
+        # before giving up on this batch -- a single bad request shouldn't be
+        # able to wipe out every destination in it.
+        data = None
+        for attempt in range(3):
+            try:
+                resp = requests.get(url, params=params, timeout=15)
+                resp.raise_for_status()
+                data = resp.json()
+                break
+            except requests.RequestException as e:
+                print(f"  Bulk weather fetch error batch {i} (attempt {attempt + 1}/3): {e}")
+                if attempt < 2:
+                    time.sleep(1 * (attempt + 1))
+
+        if isinstance(data, list):
+            all_forecasts.extend(data)
+        elif isinstance(data, dict) and "daily" in data:
+            # Single-location response (batch of 1)
+            all_forecasts.append(data)
+        else:
+            if data is not None:
                 print(f"  Unexpected bulk response for batch {i}: {data}")
-                all_forecasts.extend([None] * len(batch))
-        except requests.RequestException as e:
-            print(f"  Bulk weather fetch error batch {i}: {e}")
             all_forecasts.extend([None] * len(batch))
 
     return all_forecasts
