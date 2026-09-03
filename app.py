@@ -9,6 +9,7 @@ import sys
 import time
 from collections import defaultdict
 from datetime import datetime
+from urllib.parse import quote
 from flask import Flask, jsonify, render_template, request
 from dotenv import load_dotenv
 
@@ -31,6 +32,9 @@ TOP_DESTINATIONS_PER_COUNTRY = 12
 PINNED_DESTINATIONS = {
     "Spain": ["Santiago de Compostela", "Bilbao"],
 }
+
+# Origin airports covered by the dedicated "Shannon & Knock" home page panel
+SHANNON_KNOCK_ORIGINS = {"Shannon", "Knock"}
 
 
 def _booking_links(result):
@@ -83,6 +87,16 @@ def _serialise_destination(r):
     }
 
 
+def _routes_from(r, origins):
+    """Return the (airline, airport) tuples in a candidate whose airport is in `origins`."""
+    return [route for route in r["routes"] if route[1] in origins]
+
+
+def _with_routes(r, routes):
+    """Shallow-copy a candidate result with its routes replaced."""
+    return {**r, "routes": routes}
+
+
 def _get_candidates(force=False):
     """Return every qualifying destination, sorted best weather first, using a 1h cache."""
     now = time.time()
@@ -119,7 +133,14 @@ def index():
 
 @app.route("/country/<country>")
 def country_page(country):
-    return render_template("country.html", country=country)
+    return render_template("country.html", heading=country, api_path=f"/api/destinations/{quote(country)}")
+
+
+@app.route("/shannon-knock")
+def shannon_knock_page():
+    return render_template(
+        "country.html", heading="Shannon & Knock", api_path="/api/destinations/shannon-knock"
+    )
 
 
 @app.route("/api/countries")
@@ -154,8 +175,21 @@ def countries():
         })
         top = top[:TOP_COUNTRIES - 1] + [spain]
 
+    sk_matches = [r for r in candidates if _routes_from(r, SHANNON_KNOCK_ORIGINS)]
+    if sk_matches:
+        best = sk_matches[0]
+        shannon_knock = {
+            "count": len(sk_matches),
+            "best_city": best["city"],
+            "best_temp": round(best["best_temp"], 1),
+            "best_good_days": len(best["good_days"]),
+        }
+    else:
+        shannon_knock = {"count": 0, "best_city": None, "best_temp": None, "best_good_days": 0}
+
     data = {
         "countries": top,
+        "shannon_knock": shannon_knock,
         "updated_at": datetime.utcnow().strftime("%d %b %Y, %H:%M UTC"),
     }
 
@@ -194,7 +228,33 @@ def destinations_by_country(country):
     destinations = [_serialise_destination(r) for r in matches]
 
     data = {
-        "country": country,
+        "label": country,
+        "destinations": destinations,
+        "updated_at": datetime.utcnow().strftime("%d %b %Y, %H:%M UTC"),
+        "count": len(destinations),
+    }
+
+    resp = jsonify(data)
+    resp.headers["Cache-Control"] = "public, max-age=0, s-maxage=3600"
+    return resp
+
+
+@app.route("/api/destinations/shannon-knock")
+def destinations_shannon_knock():
+    force = request.args.get("refresh") == "1"
+    candidates = _get_candidates(force)
+
+    matches = []
+    for r in candidates:
+        sk_routes = _routes_from(r, SHANNON_KNOCK_ORIGINS)
+        if sk_routes:
+            matches.append(_with_routes(r, sk_routes))
+    matches = matches[:TOP_DESTINATIONS_PER_COUNTRY]
+
+    destinations = [_serialise_destination(r) for r in matches]
+
+    data = {
+        "label": "Shannon & Knock",
         "destinations": destinations,
         "updated_at": datetime.utcnow().strftime("%d %b %Y, %H:%M UTC"),
         "count": len(destinations),

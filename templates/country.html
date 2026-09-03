@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ country }} ☀️ — Getaway</title>
+    <title>{{ heading }} ☀️ — Getaway</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☀️</text></svg>">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
@@ -11,7 +11,7 @@
 
 <header>
     <a class="back-link" href="/">← All countries</a>
-    <h1>{{ country }}</h1>
+    <h1>{{ heading }}</h1>
     <p class="subtitle">Direct flights from Ireland &nbsp;·&nbsp; Best weather right now</p>
     <div class="header-meta">
         <div id="last-updated">Checking weather…</div>
@@ -22,7 +22,7 @@
 <main>
     <div id="loading">
         <div class="spinner"></div>
-        <p>Checking the weather in {{ country }}…<small>This may take a minute on first load</small></p>
+        <p>Checking the weather in {{ heading }}…<small>This may take a minute on first load</small></p>
     </div>
 
     <div id="error">
@@ -34,7 +34,7 @@
     <div id="empty">
         <div class="emoji">🌥️</div>
         <h2>No destinations meet the criteria right now</h2>
-        <p>Check back later or pick another country.</p>
+        <p>Check back later or pick another option.</p>
     </div>
 
     <div id="stats-bar">
@@ -46,11 +46,10 @@
 
 <script src="{{ url_for('static', filename='common.js') }}"></script>
 <script>
-    const COUNTRY = {{ country|tojson }};
+    const API_PATH = {{ api_path|tojson }};
 
     async function loadWeather(force = false) {
-        const base = `/api/destinations/${encodeURIComponent(COUNTRY)}`;
-        const url = force ? `${base}?refresh=1` : base;
+        const url = force ? `${API_PATH}?refresh=1` : API_PATH;
         try {
             const res = await fetch(url);
             if (!res.ok) throw new Error("API error " + res.status);
@@ -71,7 +70,7 @@
             } else {
                 document.getElementById("stats-bar").style.display = "flex";
                 document.getElementById("result-count").textContent =
-                    `Top ${data.count} destination${data.count !== 1 ? "s" : ""} in ${data.country}`;
+                    `Top ${data.count} destination${data.count !== 1 ? "s" : ""} in ${data.label}`;
 
                 const grid = document.getElementById("grid");
                 grid.style.display = "grid";
