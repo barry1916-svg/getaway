@@ -398,8 +398,8 @@ ROUTES = {
     "Ponta Delgada": [],  # Ryanair discontinued all Azores routes March 2026
     # Italy
     "Rome": [
-        ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
-        ("Ryanair", "Shannon", 1, 12)  # Shannon → Ciampino (CIA)
+        ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12)
+        # Ryanair Shannon route not currently bookable (Sept 2026)
     ],
     "Milan": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
