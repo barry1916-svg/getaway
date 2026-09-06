@@ -322,7 +322,8 @@ ROUTES = {
     # Spain
     "Barcelona": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12),
-        ("Ryanair", "Cork", 4, 10), ("Ryanair", "Shannon", 4, 10)
+        ("Ryanair", "Cork", 4, 10)
+        # Ryanair Shannon route not currently bookable (Sept 2026)
     ],
     "Madrid": [
         ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 1, 12), ("Iberia", "Dublin", 1, 12),
