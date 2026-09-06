@@ -24,6 +24,7 @@ app = Flask(__name__)
 # Simple in-memory cache (persists across requests on Railway / local; not on Vercel)
 _cache = {"data": None, "ts": 0}
 CACHE_TTL = 3600  # 1 hour
+RETRY_COOLDOWN = 300  # how soon to retry after rejecting a suspiciously bad fetch
 
 TOP_COUNTRIES = 6
 TOP_DESTINATIONS_PER_COUNTRY = 12
@@ -127,6 +128,17 @@ def _get_candidates(force=False):
 
     # Best weather first: most sunny days, then hottest
     candidates.sort(key=lambda x: (len(x["good_days"]), x["best_temp"]), reverse=True)
+
+    # Guard against a transient failure (e.g. Open-Meteo briefly rate-limiting
+    # mid-request, or one batch's retries all failing) poisoning the cache with
+    # a big, spurious drop in results for up to an hour. If this computation
+    # came back far short of what we already had, something likely failed
+    # silently -- keep serving the last good result and retry again soon
+    # rather than waiting out the full TTL.
+    previous = _cache["data"]
+    if previous and len(candidates) < len(previous) * 0.6:
+        _cache["ts"] = now - CACHE_TTL + RETRY_COOLDOWN
+        return previous
 
     _cache["data"] = candidates
     _cache["ts"] = now
