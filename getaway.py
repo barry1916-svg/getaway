@@ -366,7 +366,10 @@ ROUTES = {
         ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 4, 10)
     ],  # Aer Lingus Dublin route not currently bookable (Sept 2026)
     "Bilbao": [("Aer Lingus", "Dublin", 4, 10), ("Aer Lingus", "Cork", 4, 10)],
-    "Santiago de Compostela": [("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 5, 10), ("Ryanair", "Shannon", 5, 9), ("Aer Lingus", "Cork", 6, 10)],
+    "Santiago de Compostela": [
+        ("Ryanair", "Dublin", 1, 12), ("Aer Lingus", "Dublin", 5, 10), ("Aer Lingus", "Cork", 6, 10)
+        # Ryanair Shannon route not currently bookable (Sept 2026)
+    ],
     "Girona": [("Ryanair", "Dublin", 4, 10), ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 4, 10), ("Ryanair", "Knock", 5, 9)],
     "Reus": [("Ryanair", "Dublin", 4, 10), ("Ryanair", "Cork", 1, 12), ("Ryanair", "Shannon", 4, 10)],
     "Murcia": [("Ryanair", "Dublin", 1, 12)],
